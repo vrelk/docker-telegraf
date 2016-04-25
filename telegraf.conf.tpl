@@ -1,28 +1,18 @@
-# Telegraf Configuration
-#
+# Telegraf configuration
+
 # Telegraf is entirely plugin driven. All metrics are gathered from the
 # declared inputs, and sent to the declared outputs.
-#
+
 # Plugins must be declared in here to be active.
 # To deactivate a plugin, comment out the name and any variables.
-#
+
 # Use 'telegraf -config telegraf.conf -test' to see what metrics a config
 # file would generate.
-#
-# Environment variables can be used anywhere in this config file, simply prepend
-# them with $. For strings the variable must be within quotes (ie, "$STR_VAR"),
-# for numbers and booleans they should be plain (ie, $INT_VAR, $BOOL_VAR)
-
 
 # Global tags can be specified here in key="value" format.
 [global_tags]
   # dc = "us-east-1" # will tag all metrics with dc=us-east-1
   # rack = "1a"
-  ## Environment variables can be used as tags, and throughout the config file
-  # user = "$USER"
-  {% for key, value in environment('TAG_') %}{{ key }}="{{ value }}"
-  {% endfor %}
-
 
 # Configuration for telegraf agent
 [agent]
@@ -58,12 +48,10 @@
   quiet = false
   ## Override default hostname, if empty use os.Hostname()
   hostname = "{{ HOSTNAME }}"
-  ## If set to true, do no set the "host" tag in the telegraf agent.
-  omit_hostname = false
 
 
 ###############################################################################
-#                            OUTPUT PLUGINS                                   #
+#                                  OUTPUTS                                    #
 ###############################################################################
 
 # Configuration for influxdb server to send metrics to
@@ -91,100 +79,68 @@
   ## Set UDP payload size, defaults to InfluxDB UDP Client default (512 bytes)
   # udp_payload = 512
 
-# # Configuration for AWS CloudWatch output.
-# [[outputs.cloudwatch]]
-#   ## Amazon REGION
-#   region = 'us-east-1'
-#
-#   ## Namespace for the CloudWatch MetricDatums
-#   namespace = 'InfluxData/Telegraf'
+  ## Optional SSL Config
+  # ssl_ca = "/etc/telegraf/ca.pem"
+  # ssl_cert = "/etc/telegraf/cert.pem"
+  # ssl_key = "/etc/telegraf/key.pem"
+  ## Use SSL but skip chain & host verification
+  # insecure_skip_verify = false
+
 
 ###############################################################################
-#                            INPUT PLUGINS                                    #
+#                                  INPUTS                                     #
 ###############################################################################
 
 # Read metrics about cpu usage
 [[inputs.cpu]]
-  ## Whether to report per-cpu stats or not
+  # Whether to report per-cpu stats or not
   percpu = true
-  ## Whether to report total system cpu stats or not
+  # Whether to report total system cpu stats or not
   totalcpu = true
-  ## Comment this line if you want the raw CPU time metrics
+  # Comment this line if you want the raw CPU time metrics
   fielddrop = ["time_*"]
-
 
 # Read metrics about disk usage by mount point
 [[inputs.disk]]
-  ## By default, telegraf gather stats for all mountpoints.
-  ## Setting mountpoints will restrict the stats to the specified mountpoints.
-  # mount_points = ["/"]
+  # By default, telegraf gather stats for all mountpoints.
+  # Setting mountpoints will restrict the stats to the specified mountpoints.
+  # mount_points=["/"]
 
-  ## Ignore some mountpoints by filesystem type. For example (dev)tmpfs (usually
-  ## present on /run, /var/run, /dev/shm or /dev).
+  # Ignore some mountpoints by filesystem type. For example (dev)tmpfs (usually
+  # present on /run, /var/run, /dev/shm or /dev).
   ignore_fs = ["tmpfs", "devtmpfs"]
-
 
 # Read metrics about disk IO by device
 [[inputs.diskio]]
-  ## By default, telegraf will gather stats for all devices including
-  ## disk partitions.
-  ## Setting devices will restrict the stats to the specified devices.
+  # By default, telegraf will gather stats for all devices including
+  # disk partitions.
+  # Setting devices will restrict the stats to the specified devices.
   # devices = ["sda", "sdb"]
-  ## Uncomment the following line if you do not need disk serial numbers.
+  # Uncomment the following line if you do not need disk serial numbers.
   # skip_serial_number = true
-
 
 # Get kernel statistics from /proc/stat
 [[inputs.kernel]]
   # no configuration
 
-
 # Read metrics about memory usage
 [[inputs.mem]]
   # no configuration
-
 
 # Get the number of processes and group them by status
 [[inputs.processes]]
   # no configuration
 
-
 # Read metrics about swap memory usage
 [[inputs.swap]]
   # no configuration
-
 
 # Read metrics about system load & uptime
 [[inputs.system]]
   # no configuration
 
 
-# Read metrics about docker containers
-[[inputs.docker]]
-  ## Docker Endpoint
-  ##   To use TCP, set endpoint = "tcp://[ip]:[port]"
-  ##   To use environment variables (ie, docker-machine), set endpoint = "ENV"
-  endpoint = "unix:///var/run/docker.sock"
-  ## Only collect metrics for these containers, collect all if empty
-  container_names = []
-
-
-# # Read metrics from one or more commands that can output to stdout
-# [[inputs.exec]]
-#   ## Commands array
-#   commands = ["/tmp/test.sh", "/usr/bin/mycollector --foo=bar"]
-#
-#   ## measurement name suffix (for separating different commands)
-#   name_suffix = "_mycollector"
-#
-#   ## Data format to consume.
-#   ## Each data format has it's own unique set of configuration options, read
-#   ## more about them here:
-#   ## https://github.com/influxdata/telegraf/blob/master/docs/DATA_FORMATS_INPUT.md
-#   data_format = "influx"
-
-
-# # Read TCP metrics such as established, time wait and sockets counts.
-# [[inputs.netstat]]
-#   # no configuration
+###############################################################################
+#                              SERVICE INPUTS                                 #
+###############################################################################
 
