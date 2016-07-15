@@ -32,10 +32,10 @@ fi
 
 CMD="/bin/telegraf"
 CMDARGS="-config /etc/telegraf/telegraf.conf"
-export AMP_LAUNCH_CMD="$CMD $CMDARGS"
+export AMPPILOT_LAUNCH_CMD="$CMD $CMDARGS"
 if [[ -n "$CONSUL" && -n "$PILOT" ]]; then
     echo "registering in Consul with $PILOT"
-    exec "$PILOT" "$CMD" $CMDARGS
+    exec "$PILOT"
 else
     echo "not registering in Consul"
     exec "$CMD" $CMDARGS
