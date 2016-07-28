@@ -26,6 +26,7 @@ services:
       - /bin/amppilot:/bin/amppilot
     environment:
       CONSUL: consul:8500
+    labels:
       - "io.appcelerator.amp.build.mounts=/bin/amppilot"
 
   telegraf:
@@ -36,7 +37,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /var/run/utmp:/var/run/utmp:ro
-      - /bin/amppilot/amp-pilot.alpine:/bin/amp-pilot:ro
+      - /bin/amppilot:/bin/amppilot:ro
       - /tmp/docker-compose-telegraf-output:/var/data
     environment:
       CONSUL: consul:8500
