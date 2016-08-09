@@ -43,7 +43,7 @@ ENV SERVICE_NAME=telegraf
 ENTRYPOINT ["/bin/sh", "-c"]
 CMD ["/run.sh"]
 
-HEALTHCHECK --interval=2s --retries=3 --timeout=1s CMD pidof telegraf
+HEALTHCHECK --interval=5s --retries=30 --timeout=10s CMD pidof telegraf
 
 LABEL axway_image=telegraf
 # will be updated whenever there's a new commit
