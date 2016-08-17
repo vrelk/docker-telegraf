@@ -1,7 +1,7 @@
 FROM appcelerator/alpine:20160726
 MAINTAINER Nicolas Degory <ndegory@axway.com>
 
-ENV TELEGRAF_VERSION 0.13.1
+ENV TELEGRAF_VERSION 0.13.2
 
 RUN apk update && apk upgrade && \
     apk --virtual build-deps add go>1.6 git gcc musl-dev make binutils && \
@@ -43,7 +43,7 @@ ENV SERVICE_NAME=telegraf
 ENTRYPOINT ["/bin/sh", "-c"]
 CMD ["/run.sh"]
 
-HEALTHCHECK --interval=5s --retries=30 --timeout=10s CMD pidof telegraf
+HEALTHCHECK --interval=5s --retries=3 --timeout=3s CMD pidof telegraf
 
 LABEL axway_image=telegraf
 # will be updated whenever there's a new commit
