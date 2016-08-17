@@ -144,13 +144,13 @@
   required_acks = -1
 
   ##  The total number of times to retry sending a message
-  max_retry = 3
+  max_retry = {{ OUTPUT_KAFKA_RETRIES | default("3") }}
 
   ## Optional SSL Config
   # ssl_ca = "/etc/telegraf/ca.pem"
   # ssl_cert = "/etc/telegraf/cert.pem"
   # ssl_key = "/etc/telegraf/key.pem"
-  ## Use SSL but skip chain & host verification
+  ## Use SSL but skip chain and host verification
   # insecure_skip_verify = false
 
   ## Data format to output.
