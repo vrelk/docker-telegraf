@@ -1,8 +1,6 @@
 # docker-telegraf
 
-[![Build Status](http://drone.amp.appcelerator.io:8000/api/badges/appcelerator/docker-telegraf/status.svg)](http://drone.amp.appcelerator.io:8000/appcelerator/docker-telegraf)
-
-Docker Image for [InfluxData Telegraf](https://influxdata.com/time-series-platform/telegraf/).
+Docker Image for [InfluxData Telegraf](https://influxdata.com/time-series-platform/telegraf/), based on Alpine linux.
 
 ## Run
 
@@ -31,14 +29,14 @@ docker run -t -v /var/run/docker.sock:/var/run/docker.sock:ro -v /var/run/utmp:/
 - OUTPUT_KAFKA_ENABLED - enable Kafka Output, defaults to false
 - OUTPUT_FILE_ENABLED - enable File Output, defaults to false
 - INPUT_KAFKA_ENABLED - enable Kafka Input, defaults to false
-- INPUT_CPU_ENABLED - enable cpu metrics, defaults to false
-- INPUT_DISK_ENABLED - enable disk metrics, defaults to false
-- INPUT_DISKIO_ENABLED - enable disk I/O metrics, defaults to false
+- INPUT_CPU_ENABLED - enable cpu metrics, defaults to true
+- INPUT_DISK_ENABLED - enable disk metrics, defaults to true
+- INPUT_DISKIO_ENABLED - enable disk I/O metrics, defaults to true
 - INPUT_KERNEL_ENABLED - enable kernel metrics, defaults to false
-- INPUT_MEM_ENABLED - enable mem metrics, defaults to false
-- INPUT_PROCESS_ENABLED - enable process metrics, defaults to false
-- INPUT_SWAP_ENABLED - enable swap metrics, defaults to false
-- INPUT_SYSTEM_ENABLED - enable system metrics, defaults to false
+- INPUT_MEM_ENABLED - enable mem metrics, defaults to true
+- INPUT_PROCESS_ENABLED - enable process metrics, defaults to true
+- INPUT_SWAP_ENABLED - enable swap metrics, defaults to true
+- INPUT_SYSTEM_ENABLED - enable system metrics, defaults to true
 - INPUT_DOCKER_ENABLED - enable Docker metrics, defaults to true
 - INFLUXDB_URL - Where is your InfluxDB running? (default: http://localhost:8086) Note: No trailing slash!
 - INFLUXDB_USER - InfluxDB username
@@ -54,8 +52,9 @@ docker run -t -v /var/run/docker.sock:/var/run/docker.sock:ro -v /var/run/utmp:/
 - INPUT_KAFKA_TOPIC - Kafka topic on which to read, defaults to telegraf
 - INPUT_KAFKA_ZOOKEEPER_PEER - Zookeeper peers used by Kafka in input, defaults to zookeeper:2181
 - KAFKA_DATA_FORMAT - Kafka data format, defaults to influx
-- CONSUL - Consul address for amp-pilot, example: consul:8500, disabled by default
 
 ## Tags
 
 - latest
+- telegraf-0.13
+- telegraf-1.0
