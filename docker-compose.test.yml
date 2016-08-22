@@ -1,13 +1,5 @@
 version: '2'
 services:
-  consul:
-    extends:
-      file: docker-compose.yml
-      service: consul
-  pilot:
-    extends:
-      file: docker-compose.yml
-      service: pilot
   telegraf:
     extends:
       file: docker-compose.yml
@@ -22,5 +14,3 @@ services:
       service: sut
     depends_on:
       - telegraf
-      - consul
-      - pilot

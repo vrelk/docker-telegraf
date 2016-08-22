@@ -1,24 +1,5 @@
 version: "2"
 services:
-  consul:
-    image: appcelerator/consul:latest-server
-    hostname: consul
-    ports:
-      - "8400:8400"
-      - "8500:8500"
-      - "8600:53/udp"
-    command:
-      [ "-bootstrap"]
-
-  pilot:
-    image: appcelerator/amp-pilot:latest
-    volumes:
-      - /bin/amppilot:/bin/amppilot
-    environment:
-      CONSUL: consul:8500
-    labels:
-      - "io.appcelerator.amp.build.mounts=/bin/amppilot"
-
   telegraf:
     image: appcelerator/telegraf
     build:
@@ -29,18 +10,15 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /var/run/utmp:/var/run/utmp:ro
-      - /bin/amppilot:/bin/amppilot:ro
       - /tmp/docker-compose-telegraf-output:/var/data
     environment:
-      CONSUL: consul:8500
-      AMPPILOT_KAFKA: ""
       OUTPUT_INFLUXDB_ENABLED: "false"
       OUTPUT_FILE_ENABLED: "true"
       OUTPUT_FILE_PATH: "/var/data/output.dat"
       INPUT_DOCKER_ENABLED: "true"
     labels:
       - "ServiceUUId=system.telegraf"
-      - "io.appcelerator.amp.build.mounts=/var/run/docker.sock,/var/run/utmp,/bin/amppilot,/tmp/docker-compose-telegraf-output:/var/data"
+      - "io.appcelerator.amp.build.mounts=/var/run/docker.sock,/var/run/utmp,/tmp/docker-compose-telegraf-output:/var/data"
 
   sut:
     image: appcelerator/sut
