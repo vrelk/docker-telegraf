@@ -25,14 +25,14 @@ ENV OUTPUT_CLOUDWATCH_ENABLED   false
 ENV OUTPUT_KAFKA_ENABLED        false
 ENV OUTPUT_FILE_ENABLED         false
 ENV INPUT_KAFKA_ENABLED         false
-ENV INPUT_CPU_ENABLED           false
-ENV INPUT_DISK_ENABLED          false
-ENV INPUT_DISKIO_ENABLED        false
+ENV INPUT_CPU_ENABLED           true
+ENV INPUT_DISK_ENABLED          true
+ENV INPUT_DISKIO_ENABLED        true
 ENV INPUT_KERNEL_ENABLED        false
-ENV INPUT_MEM_ENABLED           false
-ENV INPUT_PROCESS_ENABLED       false
-ENV INPUT_SWAP_ENABLED          false
-ENV INPUT_SYSTEM_ENABLED        false
+ENV INPUT_MEM_ENABLED           true
+ENV INPUT_PROCESS_ENABLED       true
+ENV INPUT_SWAP_ENABLED          true
+ENV INPUT_SYSTEM_ENABLED        true
 ENV INPUT_DOCKER_ENABLED        true
 
 COPY telegraf.conf.tpl /etc/telegraf/telegraf.conf.tpl
