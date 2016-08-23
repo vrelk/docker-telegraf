@@ -39,8 +39,6 @@ ENV INPUT_DOCKER_ENABLED        true
 COPY telegraf.conf.tpl /etc/telegraf/telegraf.conf.tpl
 COPY run.sh /run.sh
 
-ENV SERVICE_NAME=telegraf
-
 ENTRYPOINT ["/bin/sh", "-c"]
 CMD ["/run.sh"]
 
