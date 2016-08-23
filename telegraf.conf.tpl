@@ -322,3 +322,25 @@
 {% else %}
   # Kafka input is disabled
 {% endif %}
+
+# Generic TCP listener
+{% if INPUT_LISTENER_ENABLED == "true" %}
+[[inputs.tcp_listener]]
+  ## Address and port to host TCP listener on
+  service_address = ":{{ INPUT_LISTENER_PORT | default("8094") }}"
+
+  ## Number of TCP messages allowed to queue up. Once filled, the
+  ## TCP listener will start dropping packets.
+  allowed_pending_messages = 10000
+
+  ## Maximum number of concurrent TCP connections to allow
+  max_tcp_connections = 250
+
+  ## Data format to consume.
+  ## Each data format has it's own unique set of configuration options, read
+  ## more about them here:
+  ## https://github.com/influxdata/telegraf/blob/master/docs/DATA_FORMATS_INPUT.md
+  data_format = "{{ INPUT_LISTENER_DATA_FORMAT | default("json") }}"
+{% else %}
+  # TCP listener input is disabled
+{% endif %}

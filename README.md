@@ -38,6 +38,7 @@ docker run -t -v /var/run/docker.sock:/var/run/docker.sock:ro -v /var/run/utmp:/
 - INPUT_SWAP_ENABLED - enable swap metrics, defaults to true
 - INPUT_SYSTEM_ENABLED - enable system metrics, defaults to true
 - INPUT_NETSAT_ENABLED - enable net metrics, defaults to true
+- INPUT_LISTENER_ENABLED - enable generic TCP listener, defaults to false
 - INPUT_DOCKER_ENABLED - enable Docker metrics, defaults to true
 - INFLUXDB_URL - Where is your InfluxDB running? (default: http://localhost:8086) Note: No trailing slash!
 - INFLUXDB_USER - InfluxDB username
@@ -45,6 +46,8 @@ docker run -t -v /var/run/docker.sock:/var/run/docker.sock:ro -v /var/run/utmp:/
 - INFLUXDB_TIMEOUT - InfluxDB timetout (in seconds), defaults to 5
 - CLOUDWATCH_REGION - Amazon region, defaults to us-east-1
 - CLOUDWATCH_NAMESPACE - Namespace, defaults to InfluxData/Telegraf
+- INPUT_LISTENER_PORT - Port of the generic TCP listener, defaults to 8094 (this one is exposed)
+- INPUT_LISTENER_DATA_FORMAT - Data format of the generic TCP listener, defaults to json
 - OUTPUT_KAFKA_BROKER_URL - Kafka broker URL in output, defaults to localhost:9092
 - OUTPUT_KAFKA_TOPIC - Kafka topic on which to write, defaults to telegraf
 - OUTPUT_KAFKA_RETRIES - Number of retries for the connection to Kafka, defaults to 3

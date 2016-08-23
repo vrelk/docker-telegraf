@@ -2,11 +2,12 @@
 
 DATA_DIR=/var/data
 OUTPUT_FILE=$DATA_DIR/output.dat
+DOCKER_SOCKET=/var/run/docker-host.sock
 
 _docker_logs(){
-  ct=$(docker ps | grep /telegraf | awk '{print $1}')
+  ct=$(docker --host=unix://$DOCKER_SOCKET ps | grep /telegraf | awk '{print $1}')
   echo "logs from telegraf $ct:"
-  docker logs $ct
+  docker --host=unix://$DOCKER_SOCKET logs $ct
 }
 
 # cleanup
@@ -39,7 +40,7 @@ if [[ "x$r" != "xtrue" ]]; then
 fi
 echo "[OK]"
 
-echo -n "test docker measureament...              "
+echo -n "test docker measurement...               "
 sleep 1
 grep -q "^docker," "$OUTPUT_FILE"
 if [[ $? -ne 0 ]]; then
@@ -77,6 +78,26 @@ if [[ $? -ne 0 ]]; then
   exit 1
 fi
 echo "[OK]"
+echo -n "test send to tcp listener...             "
+echo '{"count": 1, "status": 0}' | nc telegraf 8094
+if [[ $? -ne 0 ]]; then
+  echo
+  echo "failed (send)"
+  _docker_logs
+  exit 1
+fi
+echo "[OK]"
+echo -n "test tcp listener measurement data...    "
+sleep 3
+grep -q "^tcp_listener," "$OUTPUT_FILE"
+if [[ $? -ne 0 ]]; then
+  echo
+  echo "failed (no data)"
+  _docker_logs
+  exit 1
+fi
+echo "[OK]"
+
 echo "cleaning up output file"
 > "$OUTPUT_FILE"
 rm "$OUTPUT_FILE"

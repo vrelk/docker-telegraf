@@ -35,6 +35,7 @@ ENV INPUT_SWAP_ENABLED          true
 ENV INPUT_SYSTEM_ENABLED        true
 ENV INPUT_NETSTAT_ENABLED       true
 ENV INPUT_DOCKER_ENABLED        true
+ENV INPUT_LISTENER_ENABLED      false
 
 COPY telegraf.conf.tpl /etc/telegraf/telegraf.conf.tpl
 COPY run.sh /run.sh
