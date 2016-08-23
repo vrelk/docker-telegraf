@@ -33,6 +33,7 @@ ENV INPUT_MEM_ENABLED           true
 ENV INPUT_PROCESS_ENABLED       true
 ENV INPUT_SWAP_ENABLED          true
 ENV INPUT_SYSTEM_ENABLED        true
+ENV INPUT_NETSTAT_ENABLED       true
 ENV INPUT_DOCKER_ENABLED        true
 
 COPY telegraf.conf.tpl /etc/telegraf/telegraf.conf.tpl

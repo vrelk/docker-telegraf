@@ -292,8 +292,12 @@
 
 
 # # Read TCP metrics such as established, time wait and sockets counts.
-# [[inputs.netstat]]
-#   # no configuration
+{% if INPUT_NETSTAT_ENABLED == "true" %}
+[[inputs.netstat]]
+  # no configuration
+{% else %}
+  # Netstat input is disabled
+{% endif %}
 
 # Read metrics from Kafka topic(s)
 {% if INPUT_KAFKA_ENABLED == "true" %}

@@ -37,6 +37,7 @@ docker run -t -v /var/run/docker.sock:/var/run/docker.sock:ro -v /var/run/utmp:/
 - INPUT_PROCESS_ENABLED - enable process metrics, defaults to true
 - INPUT_SWAP_ENABLED - enable swap metrics, defaults to true
 - INPUT_SYSTEM_ENABLED - enable system metrics, defaults to true
+- INPUT_NETSAT_ENABLED - enable net metrics, defaults to true
 - INPUT_DOCKER_ENABLED - enable Docker metrics, defaults to true
 - INFLUXDB_URL - Where is your InfluxDB running? (default: http://localhost:8086) Note: No trailing slash!
 - INFLUXDB_USER - InfluxDB username
