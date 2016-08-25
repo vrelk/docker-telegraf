@@ -7,55 +7,56 @@ Docker Image for [InfluxData Telegraf](https://influxdata.com/time-series-platfo
 You may need to replace the path to */var/run/docker.sock* depending on the location of your docker socket.
 
 Most basic form:
-```
-docker run -t -v /var/run/docker.sock:/var/run/docker.sock:ro appcelerator/telegraf
-```
+
+    docker run -t -v /var/run/docker.sock:/var/run/docker.sock:ro appcelerator/telegraf
 
 Custom InfluxDB location and additional tags:
-```
-docker run -t -v /var/run/docker.sock:/var/run/docker.sock:ro -v /var/run/utmp:/var/run/utmp:ro -e INFLUXDB_URL=http://influxdb:8086 -e TAG_datacenter=eu-central-1 -e TAG_type=core appcelerator/telegraf
-```
+
+    docker run -t -v /var/run/docker.sock:/var/run/docker.sock:ro -v /var/run/utmp:/var/run/utmp:ro -e INFLUXDB_URL=http://influxdb:8086 -e TAG_datacenter=eu-central-1 -e TAG_type=core appcelerator/telegraf
 
 # Configuration (ENV, -e)
-- HOSTNAME - To pass in the docker host's actual hostname
-- TAG_<name> - Adds a tag with the given value to all measurements
-- INTERVAL - Data collection interval, defaults to 10s
-- ROUND_INTERVAL - Round collection interval, defaults to true
-- COLLECTION_JITTER - Collection jitter by a random amount, defaults to 1s
-- FLUSH_INTERVAL - Default flushing interval for all outputs, defaults to 10s
-- FLUSH_JITTER - Jitter the flush interval by a random amount, defaults to 3s
-- OUTPUT_INFLUXDB_ENABLED - enable InfluxDB Output, defaults to true
-- OUTPUT_CLOUDWATCH_ENABLED - enable Amazon Cloudwatch Output, defaults to false
-- OUTPUT_KAFKA_ENABLED - enable Kafka Output, defaults to false
-- OUTPUT_FILE_ENABLED - enable File Output, defaults to false
-- INPUT_KAFKA_ENABLED - enable Kafka Input, defaults to false
-- INPUT_CPU_ENABLED - enable cpu metrics, defaults to true
-- INPUT_DISK_ENABLED - enable disk metrics, defaults to true
-- INPUT_DISKIO_ENABLED - enable disk I/O metrics, defaults to true
-- INPUT_KERNEL_ENABLED - enable kernel metrics, defaults to false
-- INPUT_MEM_ENABLED - enable mem metrics, defaults to true
-- INPUT_PROCESS_ENABLED - enable process metrics, defaults to true
-- INPUT_SWAP_ENABLED - enable swap metrics, defaults to true
-- INPUT_SYSTEM_ENABLED - enable system metrics, defaults to true
-- INPUT_NETSAT_ENABLED - enable net metrics, defaults to true
-- INPUT_LISTENER_ENABLED - enable generic TCP listener, defaults to false
-- INPUT_DOCKER_ENABLED - enable Docker metrics, defaults to true
-- INFLUXDB_URL - Where is your InfluxDB running? (default: http://localhost:8086) Note: No trailing slash!
-- INFLUXDB_USER - InfluxDB username
-- INFLUXDB_PASS - InfluxDB password, defaults to metrics
-- INFLUXDB_TIMEOUT - InfluxDB timetout (in seconds), defaults to 5
-- CLOUDWATCH_REGION - Amazon region, defaults to us-east-1
-- CLOUDWATCH_NAMESPACE - Namespace, defaults to InfluxData/Telegraf
-- INPUT_LISTENER_PORT - Port of the generic TCP listener, defaults to 8094 (this one is exposed)
-- INPUT_LISTENER_DATA_FORMAT - Data format of the generic TCP listener, defaults to json
-- OUTPUT_KAFKA_BROKER_URL - Kafka broker URL in output, defaults to localhost:9092
-- OUTPUT_KAFKA_TOPIC - Kafka topic on which to write, defaults to telegraf
-- OUTPUT_KAFKA_RETRIES - Number of retries for the connection to Kafka, defaults to 3
-- OUTPUT_FILE_PATH - absolute path to the file, would better be mounted, defaults to stdout
-- INPUT_KAFKA_BROKER_URL - Kafka broker URL in input, defaults to localhost:9092
-- INPUT_KAFKA_TOPIC - Kafka topic on which to read, defaults to telegraf
-- INPUT_KAFKA_ZOOKEEPER_PEER - Zookeeper peers used by Kafka in input, defaults to zookeeper:2181
-- KAFKA_DATA_FORMAT - Kafka data format, defaults to influx
+
+Variable | Description | Default value | Sample value 
+-------- | ----------- | ------------- | ------------
+HOSTNAME | To pass in the docker host's actual hostname | | localhost
+TAG_\<name\> | Adds a tag with the given value to all measurements | | TAG_datacenter=eu-central-1
+INTERVAL | Data collection interval | 10s |
+ROUND_INTERVAL | Round collection interval | true |
+COLLECTION_JITTER | Collection jitter by a random amount | 1s |
+FLUSH_INTERVAL | Default flushing interval for all outputs | 10s |
+FLUSH_JITTER | Jitter the flush interval by a random amount | 3s |
+OUTPUT_INFLUXDB_ENABLED | enable InfluxDB Output | true |
+OUTPUT_CLOUDWATCH_ENABLED | enable Amazon Cloudwatch Output | false |
+OUTPUT_KAFKA_ENABLED | enable Kafka Output | false |
+OUTPUT_FILE_ENABLED | enable File Output | false |
+INPUT_KAFKA_ENABLED | enable Kafka Input | false |
+INPUT_CPU_ENABLED | enable cpu metrics | true |
+INPUT_DISK_ENABLED | enable disk metrics | true |
+INPUT_DISKIO_ENABLED | enable disk I/O metrics | true |
+INPUT_KERNEL_ENABLED | enable kernel metrics | false |
+INPUT_MEM_ENABLED | enable mem metrics | true |
+INPUT_PROCESS_ENABLED | enable process metrics | true |
+INPUT_SWAP_ENABLED | enable swap metrics | true |
+INPUT_SYSTEM_ENABLED | enable system metrics | true |
+INPUT_NETSAT_ENABLED | enable net metrics | true |
+INPUT_LISTENER_ENABLED | enable generic TCP listener | false |
+INPUT_DOCKER_ENABLED | enable Docker metrics | true |
+INFLUXDB_URL | Where is your InfluxDB running? | http://localhost:8086 | http://influxdb:8086
+INFLUXDB_USER | InfluxDB username | |
+INFLUXDB_PASS | InfluxDB password | metrics |
+INFLUXDB_TIMEOUT | InfluxDB timetout (in seconds) | 5 |
+CLOUDWATCH_REGION | Amazon region | us-east-1 |
+CLOUDWATCH_NAMESPACE | Namespace | InfluxData/Telegraf |
+INPUT_LISTENER_PORT | Port of the generic TCP listener | 8094 |
+INPUT_LISTENER_DATA_FORMAT | Data format of the generic TCP listener | json |
+OUTPUT_KAFKA_BROKER_URL | Kafka broker URL in output | localhost:9092 |
+OUTPUT_KAFKA_TOPIC | Kafka topic on which to write | telegraf |
+OUTPUT_KAFKA_RETRIES | Number of retries for the connection to Kafka | 3 |
+OUTPUT_FILE_PATH | absolute path to the file, would better be mounted | stdout |
+INPUT_KAFKA_BROKER_URL | Kafka broker URL in input | localhost:9092 |
+INPUT_KAFKA_TOPIC | Kafka topic on which to read | telegraf |
+INPUT_KAFKA_ZOOKEEPER_PEER | Zookeeper peers used by Kafka in input | zookeeper:2181 |
+KAFKA_DATA_FORMAT | Kafka data format | influx |
 
 ## Tags
 
