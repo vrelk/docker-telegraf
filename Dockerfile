@@ -16,7 +16,7 @@ RUN apk update && apk upgrade && \
     cd / && rm -rf /var/cache/apk/* $GOPATH && \
     mkdir -p /etc/telegraf
 
-EXPOSE 8125/udp 8092/udp 8094
+EXPOSE 8094
 
 ENV INFLUXDB_URL http://localhost:8086
 ENV INTERVAL 10s
