@@ -291,6 +291,13 @@
 #   data_format = "influx"
 
 
+{% if INPUT_NET_ENABLED == "true" %}
+[[inputs.net]]
+  # no configuration
+{% else %}
+  # Net input is disabled
+{% endif %}
+
 # # Read TCP metrics such as established, time wait and sockets counts.
 {% if INPUT_NETSTAT_ENABLED == "true" %}
 [[inputs.netstat]]

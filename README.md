@@ -38,7 +38,8 @@ INPUT_MEM_ENABLED | enable mem metrics | true |
 INPUT_PROCESS_ENABLED | enable process metrics | true |
 INPUT_SWAP_ENABLED | enable swap metrics | true |
 INPUT_SYSTEM_ENABLED | enable system metrics | true |
-INPUT_NETSAT_ENABLED | enable net metrics | true |
+INPUT_NETSTAT_ENABLED | enable netstat metrics | false |
+INPUT_NET_ENABLED | enable net metrics | true |
 INPUT_LISTENER_ENABLED | enable generic TCP listener | false |
 INPUT_DOCKER_ENABLED | enable Docker metrics | true |
 INFLUXDB_URL | Where is your InfluxDB running? | http://localhost:8086 | http://influxdb:8086

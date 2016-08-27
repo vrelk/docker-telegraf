@@ -78,6 +78,16 @@ if [[ $? -ne 0 ]]; then
   exit 1
 fi
 echo "[OK]"
+echo "[OK]"
+echo -n "test net measurement...                  "
+grep -q "^net," "$OUTPUT_FILE"
+if [[ $? -ne 0 ]]; then
+  echo
+  echo "failed"
+  _docker_logs
+  exit 1
+fi
+echo "[OK]"
 echo -n "test send to tcp listener...             "
 echo '{"count": 1, "status": 0}' | nc telegraf 8094
 if [[ $? -ne 0 ]]; then
