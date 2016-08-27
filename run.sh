@@ -31,6 +31,35 @@ else
     fi
 fi
 
+mode="single"
+timer=""
+while getopts ":m:r:" opt; do
+  case $opt in
+    r)
+      timer=$((RANDOM % $OPTARG)) 
+      echo "INFO - requested timer before telegraf start ($timer)"
+      ;;
+    m)
+      mode=$OPTARG
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      ;;
+  esac
+done
+if [[ -n "$timer" ]]; then
+  sleep $timer
+fi
 CMD="/bin/telegraf"
 CMDARGS="-config /etc/telegraf/telegraf.conf"
-exec "$CMD" $CMDARGS
+if [[ "$mode" = "restart" ]]; then
+  echo "WARNING - restart option is for debug only"
+  i=0
+  while [[ $i -lt 30 ]]; do
+    "$CMD" $CMDARGS
+    ((i++))
+    sleep 1
+  done
+else
+  exec "$CMD" $CMDARGS
+fi
