@@ -313,6 +313,7 @@
   topics = [ "{{ INPUT_KAFKA_TOPIC | default("telegraf") }}" ]
   ## an array of Zookeeper connection strings
   zookeeper_peers = ["{{ INPUT_KAFKA_ZOOKEEPER_PEER | default("zookeeper:2181") }}"]
+  zookeeper_chroot = "{{ INPUT_KAFKA_ZOOKEEPER_CHROOT | default("") }}"
   ## the name of the consumer group
   consumer_group = "telegraf_metrics_consumers"
   ## Maximum number of metrics to buffer between collection intervals

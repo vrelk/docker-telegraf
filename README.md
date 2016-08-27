@@ -57,6 +57,7 @@ OUTPUT_FILE_PATH | absolute path to the file, would better be mounted | stdout |
 INPUT_KAFKA_BROKER_URL | Kafka broker URL in input | localhost:9092 |
 INPUT_KAFKA_TOPIC | Kafka topic on which to read | telegraf |
 INPUT_KAFKA_ZOOKEEPER_PEER | Zookeeper peers used by Kafka in input | zookeeper:2181 |
+INPUT_KAFKA_ZOOKEEPER_CHROOT | Zookeeper chroot path | |
 KAFKA_DATA_FORMAT | Kafka data format | influx |
 
 ## Tags
