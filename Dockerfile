@@ -3,12 +3,14 @@ MAINTAINER Nicolas Degory <ndegory@axway.com>
 
 ENV TELEGRAF_VERSION 0.13.2
 
+COPY issue-amp-70.patch tmp/
 RUN apk update && apk upgrade && \
-    apk --virtual build-deps add go>1.6 git gcc musl-dev make binutils && \
+    apk --virtual build-deps add go>1.6 git gcc musl-dev make binutils patch && \
     export GOPATH=/go && \
     go get -v github.com/influxdata/telegraf && \
     cd $GOPATH/src/github.com/influxdata/telegraf && \
     git checkout -q --detach "${TELEGRAF_VERSION}" && \
+    patch -l -p1 -i /tmp/issue-amp-70.patch ./plugins/inputs/kafka_consumer/kafka_consumer.go && \
     make && \
     chmod +x $GOPATH/bin/* && \
     mv $GOPATH/bin/* /bin/ && \

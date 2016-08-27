@@ -32,7 +32,7 @@ while [[ "x$r" != "xtrue" ]]; do
     fi
   fi
   ((i++))
-  if [[ $i -gt 20 ]]; then break; fi
+  if [[ $i -gt 35 ]]; then break; fi
 done
 if [[ "x$r" != "xtrue" ]]; then
   echo
