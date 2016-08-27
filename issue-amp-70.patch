@@ -1,0 +1,19 @@
+diff --git c/plugins/inputs/kafka_consumer/kafka_consumer.go w/plugins/inputs/kafka_consumer/kafka_consumer.go
+index a2cda43..cd44959 100644
+--- c/plugins/inputs/kafka_consumer/kafka_consumer.go
++++ w/plugins/inputs/kafka_consumer/kafka_consumer.go
+@@ -128,7 +128,13 @@ func (k *Kafka) receiver() {
+                case <-k.done:
+                        return
+                case err := <-k.errs:
+-                       log.Printf("Kafka Consumer Error: %s\n", err.Error())
++                       msg := err.Error()
++                       log.Printf("Kafka Consumer Error: %s\n", msg)
++                       if strings.Contains(msg, "zk: node does not exist") {
++                               k.Stop()
++                               close(k.done)
++                               return
++                       }
+                case msg := <-k.in:
+                        metrics, err := k.parser.Parse(msg.Value)
+                        if err != nil {
