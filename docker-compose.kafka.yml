@@ -1,14 +1,14 @@
 version: "2"
 services:
   zookeeper:
-    image: appcelerator/zookeeper:latest
+    image: appcelerator/zookeeper:3.4.8
     ports:
       - "2181:2181"
       - "2888:2888"
       - "3888:3888"
 
   kafka:
-    image: appcelerator/kafka:latest
+    image: appcelerator/kafka:10.0.0.1
     environment:
       ZOOKEEPER_CONNECT: zookeeper:2181
       TOPIC_LIST: "telegraf"
@@ -57,6 +57,7 @@ services:
       INPUT_SWAP_ENABLED: "false"
       INPUT_SYSTEM_ENABLED: "false"
       INPUT_NETSTAT_ENABLED: "false"
+      INPUT_NET_ENABLED: "false"
       INPUT_LISTENER_ENABLED: "fase"
     entrypoint: ["/run.sh"]
     command: ["-m", "restart"]
