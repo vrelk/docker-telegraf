@@ -8,6 +8,9 @@ _docker_logs(){
   ct=$(docker --host=unix://$DOCKER_SOCKET ps | grep /telegraf | awk '{print $1}')
   echo "logs from telegraf $ct:"
   docker --host=unix://$DOCKER_SOCKET logs $ct
+  cat $OUTPUT_FILE
+  > "$OUTPUT_FILE"
+  rm "$OUTPUT_FILE"
 }
 
 # cleanup
@@ -78,7 +81,13 @@ if [[ $? -ne 0 ]]; then
   exit 1
 fi
 echo "[OK]"
+echo -n "test docker_container_blkio measurement... "
+grep -q "^docker_container_blkio," "$OUTPUT_FILE"
+if [[ $? -ne 0 ]]; then
+  echo "[no data]"
+else
 echo "[OK]"
+fi
 echo -n "test net measurement...                  "
 grep -q "^net," "$OUTPUT_FILE"
 if [[ $? -ne 0 ]]; then

@@ -352,3 +352,27 @@
 {% else %}
   # TCP listener input is disabled
 {% endif %}
+
+# Read metrics from NATS subject(s)
+{% if INPUT_NATS_ENABLED == "true" %}
+[[inputs.nats_consumer]]
+  ## urls of NATS servers
+  servers = ["{{ INPUT_NATS_URL | default("nats://localhost:4222") }}"]
+  ## Use Transport Layer Security
+  secure = false
+  ## subject(s) to consume
+  subjects = ["{{ INPUTS_NATS_SUBJECT | default("telegraf") }}"]
+  ## name a queue group
+  queue_group = "telegraf_consumers"
+  ## Maximum number of metrics to buffer between collection intervals
+  metric_buffer = 100000
+
+  ## Data format to consume. 
+
+  ## Each data format has it's own unique set of configuration options, read
+  ## more about them here:
+  ## https://github.com/influxdata/telegraf/blob/master/docs/DATA_FORMATS_INPUT.md
+  data_format = "influx"
+{% else %}
+  # NATS consumer input is disabled
+{% endif %}

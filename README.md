@@ -30,6 +30,7 @@ OUTPUT_CLOUDWATCH_ENABLED | enable Amazon Cloudwatch Output | false |
 OUTPUT_KAFKA_ENABLED | enable Kafka Output | false |
 OUTPUT_FILE_ENABLED | enable File Output | false |
 INPUT_KAFKA_ENABLED | enable Kafka Input | false |
+INPUT_NATS_ENABLED | enable Nats Input | false |
 INPUT_CPU_ENABLED | enable cpu metrics | true |
 INPUT_DISK_ENABLED | enable disk metrics | true |
 INPUT_DISKIO_ENABLED | enable disk I/O metrics | true |
@@ -48,6 +49,8 @@ INFLUXDB_PASS | InfluxDB password | metrics |
 INFLUXDB_TIMEOUT | InfluxDB timetout (in seconds) | 5 |
 CLOUDWATCH_REGION | Amazon region | us-east-1 |
 CLOUDWATCH_NAMESPACE | Namespace | InfluxData/Telegraf |
+INPUT_NATS_URL | Url of NATS server | nats://localhost:4222 |
+INPUT_NATS_SUBJECT | Subject to consume | telegraf |
 INPUT_LISTENER_PORT | Port of the generic TCP listener | 8094 |
 INPUT_LISTENER_DATA_FORMAT | Data format of the generic TCP listener | json |
 OUTPUT_KAFKA_BROKER_URL | Kafka broker URL in output | localhost:9092 |
