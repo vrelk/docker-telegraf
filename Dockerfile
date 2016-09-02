@@ -12,9 +12,7 @@ RUN apk update && apk upgrade && \
     cd $GOPATH/src/github.com/influxdata/telegraf && \
     git checkout -q --detach "${TELEGRAF_VERSION}" && \
     patch -l -p1 -i /tmp/issue-amp-70.patch ./plugins/inputs/kafka_consumer/kafka_consumer.go && \
-    git config user.email "amp@appcelerator.com" && \
-    git config user.name "amp" && \
-    git am /tmp/nats-output-patch-1697.patch  && \
+    patch -l -p1 -i /tmp/nats-output-patch-1697.patch && \
     make && \
     chmod +x $GOPATH/bin/* && \
     mv $GOPATH/bin/* /bin/ && \
@@ -29,6 +27,7 @@ ENV INTERVAL 10s
 ENV OUTPUT_INFLUXDB_ENABLED     true
 ENV OUTPUT_CLOUDWATCH_ENABLED   false
 ENV OUTPUT_KAFKA_ENABLED        false
+ENV OUTPUT_NATS_ENABLED         false
 ENV OUTPUT_FILE_ENABLED         false
 ENV INPUT_KAFKA_ENABLED         false
 ENV INPUT_NATS_ENABLED          false
