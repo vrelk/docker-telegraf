@@ -170,7 +170,7 @@
    # username = ""
    # password = ""
    ## NATS subject for producer messages
-   subject = "telegraf"
+   subject = "{{ OUTPUT_NATS_SUBJECT | default("telegraf") }}"
    ## Optional TLS Config
    ## CA certificate used to self-sign NATS server(s) TLS certificate(s)
    # tls_ca = "/etc/telegraf/ca.pem"
@@ -186,7 +186,7 @@
 {% endif %}
 # # Configuration for the file output
 {% if OUTPUT_FILE_ENABLED == "true" %}
-# # Send telegraf metrics to fijjjle(s)
+# # Send telegraf metrics to file(s)
 [[outputs.file]]
 #   ## Files to write to, "stdout" is a specially handled file.
 #   files = ["stdout", "/tmp/metrics.out"]
