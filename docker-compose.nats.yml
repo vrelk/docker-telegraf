@@ -8,7 +8,7 @@ services:
       - "8222:8222"
 
   telegraf-agent:
-    image: appcelerator/telegraf:nats-telegraf
+    image: appcelerator/telegraf
     build:
       context: .
       dockerfile: Dockerfile
@@ -20,11 +20,11 @@ services:
       OUTPUT_NATS_ENABLED: "true"
       OUTPUT_KAFKA_ENABLED: "false"
       OUTPUT_NATS_URL: "nats://nats:4222"
-      OUTPUT_NATS_TOPIC: "telegraf"
+      OUTPUT_NATS_SUBJECT: "telegraf"
       INPUT_DOCKER_ENABLED: "true"
 
   telegraf-consumer:
-    image: appcelerator/telegraf:nats-telegraf
+    image: appcelerator/telegraf
     build:
       context: .
       dockerfile: Dockerfile
@@ -38,7 +38,7 @@ services:
       INPUT_KAFKA_ENABLED: "false"
       INPUT_NATS_ENABLED: "true"
       INPUT_NATS_URL: "nats://nats:4222"
-      INPUT_NATS_TOPIC: "telegraf"
+      INPUT_NATS_SUBJECT: "telegraf"
       INPUT_DOCKER_ENABLED: "false"
       INPUT_CPU_ENABLED: "false"
       INPUT_DISK_ENABLED: "false"
@@ -54,4 +54,18 @@ services:
     entrypoint: ["/run.sh"]
     command: ["-m", "restart"]
     depends_on:
+      - nats
+
+  sut:
+    image: appcelerator/sut
+    build:
+      context: ./sut
+      dockerfile: Dockerfile
+    command: ["/bin/test-kafka.sh"]
+    volumes:
+      - /tmp/docker-compose-telegraf-output:/var/data
+      - /var/run/docker.sock:/var/run/docker-host.sock:ro
+    depends_on:
+      - telegraf-agent
+      - telegraf-consumer
       - nats
