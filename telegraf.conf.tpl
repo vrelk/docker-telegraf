@@ -161,10 +161,32 @@
 {% else %}
 # Kafka output is disabled
 {% endif %}
-    
+
+{% if OUTPUT_NATS_ENABLED == "true" %}
+[[outputs.nats]]
+## URLs of NATS servers
+  servers = ["{{ OUTPUT_NATS_URL | default("nats://localhost:4222") }}"]
+  ## Optional credentials
+   # username = ""
+   # password = ""
+   ## NATS subject for producer messages
+   subject = "telegraf"
+   ## Optional TLS Config
+   ## CA certificate used to self-sign NATS server(s) TLS certificate(s)
+   # tls_ca = "/etc/telegraf/ca.pem"
+   ## Use TLS but skip chain & host verification
+   # insecure_skip_verify = false
+   ## Data format to output.
+   ## Each data format has it's own unique set of configuration options, read
+   ## more about them here:
+   ## https://github.com/influxdata/telegraf/blob/master/docs/DATA_FORMATS_OUTPUT.md
+   data_format = "influx"
+{% else %}
+ # Nats output is disabled
+{% endif %}
 # # Configuration for the file output
 {% if OUTPUT_FILE_ENABLED == "true" %}
-# # Send telegraf metrics to file(s)
+# # Send telegraf metrics to fijjjle(s)
 [[outputs.file]]
 #   ## Files to write to, "stdout" is a specially handled file.
 #   files = ["stdout", "/tmp/metrics.out"]
@@ -367,7 +389,7 @@
   ## Maximum number of metrics to buffer between collection intervals
   metric_buffer = 100000
 
-  ## Data format to consume. 
+  ## Data format to consume.
 
   ## Each data format has it's own unique set of configuration options, read
   ## more about them here:
