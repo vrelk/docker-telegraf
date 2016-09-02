@@ -1,21 +1,11 @@
 version: "2"
 services:
-  zookeeper:
-    image: appcelerator/zookeeper:3.4.8
-    ports:
-      - "2181:2181"
-      - "2888:2888"
-      - "3888:3888"
 
-  kafka:
-    image: appcelerator/kafka:10.0.0.1
-    environment:
-      ZOOKEEPER_CONNECT: zookeeper:2181
-      TOPIC_LIST: "telegraf"
+  nats:
+    image: appcelerator/nats-streaming:0.2
     ports:
-      - "9092:9092"
-    depends_on:
-      - zookeeper
+      - "4222:4222"
+      - "8222:8222"
 
   telegraf-agent:
     image: appcelerator/telegraf
@@ -27,9 +17,10 @@ services:
       - /var/run/utmp:/var/run/utmp:ro
     environment:
       OUTPUT_INFLUXDB_ENABLED: "false"
-      OUTPUT_KAFKA_ENABLED: "true"
-      OUTPUT_KAFKA_BROKER_URL: "kafka:9092"
-      OUTPUT_KAFKA_TOPIC: "telegraf"
+      OUTPUT_NATS_ENABLED: "true"
+      OUTPUT_KAFKA_ENABLED: "false"
+      OUTPUT_NATS_URL: "nats://nats:4222"
+      OUTPUT_NATS_SUBJECT: "telegraf"
       INPUT_DOCKER_ENABLED: "true"
 
   telegraf-consumer:
@@ -43,10 +34,11 @@ services:
       OUTPUT_INFLUXDB_ENABLED: "false"
       OUTPUT_FILE_ENABLED: "true"
       OUTPUT_FILE_PATH: "/var/data/output.dat"
-      INPUT_KAFKA_ENABLED: "true"
-      INPUT_KAFKA_BROKER_URL: "kafka:9092"
-      INPUT_KAFKA_ZOOKEEPER_PEER: "zookeeper:2181"
-      INPUT_KAFKA_TOPIC: "telegraf"
+      OUTPUT_NATS_ENABLED: "false"
+      INPUT_KAFKA_ENABLED: "false"
+      INPUT_NATS_ENABLED: "true"
+      INPUT_NATS_URL: "nats://nats:4222"
+      INPUT_NATS_SUBJECT: "telegraf"
       INPUT_DOCKER_ENABLED: "false"
       INPUT_CPU_ENABLED: "false"
       INPUT_DISK_ENABLED: "false"
@@ -62,7 +54,7 @@ services:
     entrypoint: ["/run.sh"]
     command: ["-m", "restart"]
     depends_on:
-      - kafka
+      - nats
 
   sut:
     image: appcelerator/sut
@@ -76,5 +68,4 @@ services:
     depends_on:
       - telegraf-agent
       - telegraf-consumer
-      - kafka
-      - zookeeper
+      - nats
