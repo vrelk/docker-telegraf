@@ -61,7 +61,7 @@ services:
     build:
       context: ./sut
       dockerfile: Dockerfile
-    command: ["/bin/test-kafka.sh"]
+    command: ["/bin/test-queue.sh"]
     volumes:
       - /tmp/docker-compose-telegraf-output:/var/data
       - /var/run/docker.sock:/var/run/docker-host.sock:ro
