@@ -30,7 +30,24 @@ services:
       OUTPUT_KAFKA_ENABLED: "true"
       OUTPUT_KAFKA_BROKER_URL: "kafka:9092"
       OUTPUT_KAFKA_TOPIC: "telegraf"
-      INPUT_DOCKER_ENABLED: "true"
+      INPUT_DOCKER_ENABLED: "false"
+      INPUT_CPU_ENABLED: "false"
+      INPUT_DISK_ENABLED: "false"
+      INPUT_DISKIO_ENABLED: "false"
+      INPUT_KERNEL_ENABLED: "false"
+      INPUT_MEM_ENABLED: "false"
+      INPUT_PROCESS_ENABLED: "false"
+      INPUT_SWAP_ENABLED: "false"
+      INPUT_SYSTEM_ENABLED: "false"
+      INPUT_NETSTAT_ENABLED: "false"
+      INPUT_NET_ENABLED: "false"
+      INPUT_LISTENER_ENABLED: "true"
+      INTERVAL: 2s
+      FLUSH_INTERVAL: 2s
+      FLUSH_JITTER: 0s
+    depends_on:
+      - kafka
+      - zookeeper
 
   telegraf-consumer:
     image: appcelerator/telegraf
@@ -59,6 +76,9 @@ services:
       INPUT_NETSTAT_ENABLED: "false"
       INPUT_NET_ENABLED: "false"
       INPUT_LISTENER_ENABLED: "fase"
+      INTERVAL: 2s
+      FLUSH_INTERVAL: 2s
+      FLUSH_JITTER: 0s
     entrypoint: ["/run.sh"]
     command: ["-m", "restart"]
     depends_on:
@@ -69,7 +89,7 @@ services:
     build:
       context: ./sut
       dockerfile: Dockerfile
-    command: ["/bin/test-queue.sh"]
+    command: ["/bin/test-queue.sh", "16"]
     volumes:
       - /tmp/docker-compose-telegraf-output:/var/data
       - /var/run/docker.sock:/var/run/docker-host.sock:ro

@@ -21,7 +21,21 @@ services:
       OUTPUT_KAFKA_ENABLED: "false"
       OUTPUT_NATS_URL: "nats://nats:4222"
       OUTPUT_NATS_SUBJECT: "telegraf"
-      INPUT_DOCKER_ENABLED: "true"
+      INPUT_DOCKER_ENABLED: "false"
+      INPUT_CPU_ENABLED: "false"
+      INPUT_DISK_ENABLED: "false"
+      INPUT_DISKIO_ENABLED: "false"
+      INPUT_KERNEL_ENABLED: "false"
+      INPUT_MEM_ENABLED: "false"
+      INPUT_PROCESS_ENABLED: "false"
+      INPUT_SWAP_ENABLED: "false"
+      INPUT_SYSTEM_ENABLED: "false"
+      INPUT_NETSTAT_ENABLED: "false"
+      INPUT_NET_ENABLED: "false"
+      INPUT_LISTENER_ENABLED: "true"
+      INTERVAL: 2s
+      FLUSH_INTERVAL: 2s
+      FLUSH_JITTER: 0s
 
   telegraf-consumer:
     image: appcelerator/telegraf
@@ -50,7 +64,10 @@ services:
       INPUT_SYSTEM_ENABLED: "false"
       INPUT_NETSTAT_ENABLED: "false"
       INPUT_NET_ENABLED: "false"
-      INPUT_LISTENER_ENABLED: "fase"
+      INPUT_LISTENER_ENABLED: "false"
+      INTERVAL: 2s
+      FLUSH_INTERVAL: 2s
+      FLUSH_JITTER: 0s
     entrypoint: ["/run.sh"]
     command: ["-m", "restart"]
     depends_on:
