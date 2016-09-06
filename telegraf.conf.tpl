@@ -383,7 +383,7 @@
   ## Use Transport Layer Security
   secure = false
   ## subject(s) to consume
-  subjects = ["{{ INPUTS_NATS_SUBJECT | default("telegraf") }}"]
+  subjects = ["{{ INPUT_NATS_SUBJECT | default("telegraf") }}"]
   ## name a queue group
   queue_group = "telegraf_consumers"
   ## Maximum number of metrics to buffer between collection intervals
