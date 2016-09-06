@@ -4,7 +4,7 @@ MAINTAINER Nicolas Degory <ndegory@axway.com>
 ENV TELEGRAF_VERSION 1.0.0-rc1
 
 COPY issue-amp-70.patch tmp/
-COPY nats-output-patch-1697.patch tmp/
+COPY nats-output-patch-1697*rc1.patch tmp/
 RUN apk update && apk upgrade && \
     apk --virtual build-deps add go>1.6 git gcc musl-dev make binutils patch && \
     export GOPATH=/go && \
@@ -12,7 +12,7 @@ RUN apk update && apk upgrade && \
     cd $GOPATH/src/github.com/influxdata/telegraf && \
     git checkout -q --detach "${TELEGRAF_VERSION}" && \
     patch -l -p1 -i /tmp/issue-amp-70.patch ./plugins/inputs/kafka_consumer/kafka_consumer.go && \
-    patch -l -p1 -i /tmp/nats-output-patch-1697.patch && \
+    patch -l -p1 -i /tmp/nats-output-patch-1697*.patch && \
     make && \
     chmod +x $GOPATH/bin/* && \
     mv $GOPATH/bin/* /bin/ && \
