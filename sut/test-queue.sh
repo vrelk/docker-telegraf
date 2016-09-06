@@ -81,6 +81,7 @@ if [[ $n -ne $nm ]]; then
   echo
   echo "failed ($n/$nm msg)"
   _docker_logs
+  cat $OUTPUT_FILE
   exit 1
 fi
 echo "[OK] ($nm msg)"

@@ -2,7 +2,6 @@ version: "2"
 services:
 
   nats:
-    #image: appcelerator/nats-streaming:0.2
     image: nats
     ports:
       - "4222:4222"
@@ -23,7 +22,7 @@ services:
       OUTPUT_NATS_ENABLED: "true"
       OUTPUT_KAFKA_ENABLED: "false"
       OUTPUT_NATS_URL: "nats://nats:4222"
-      OUTPUT_NATS_SUBJECT: "telegraf"
+      OUTPUT_NATS_SUBJECT: "telegraf.out"
       INPUT_DOCKER_ENABLED: "false"
       INPUT_CPU_ENABLED: "false"
       INPUT_DISK_ENABLED: "false"
@@ -55,7 +54,7 @@ services:
       INPUT_KAFKA_ENABLED: "false"
       INPUT_NATS_ENABLED: "true"
       INPUT_NATS_URL: "nats://nats:4222"
-      INPUT_NATS_SUBJECT: "telegraf"
+      INPUT_NATS_SUBJECT: "telegraf.in"
       INPUT_DOCKER_ENABLED: "false"
       INPUT_CPU_ENABLED: "false"
       INPUT_DISK_ENABLED: "false"
@@ -81,7 +80,7 @@ services:
     build:
       context: ./sut
       dockerfile: Dockerfile
-    command: ["/bin/test-queue.sh"]
+    command: ["/bin/test-nats.sh"]
     volumes:
       - /tmp/docker-compose-telegraf-output:/var/data
       - /var/run/docker.sock:/var/run/docker-host.sock:ro
