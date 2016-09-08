@@ -5,7 +5,7 @@ OUTPUT_FILE=$DATA_DIR/output.dat
 DOCKER_SOCKET=/var/run/docker-host.sock
 CONSUMER=telegraf-consumer
 AGENT=telegraf-agent
-nm=25
+nm=3000
 waitforqueuer=${1:-2}
 
 _docker_logs(){
@@ -45,7 +45,7 @@ echo "[OK]"
 
 echo -n "test send to tcp listener...             "
 for i in $(seq $nm); do
-  echo '{"msg": '$i', "ts": '$(date +%s)'}' | nc $AGENT 8094
+  echo '{"msg": '$i', "ts": '$(date +%s)'}' | nc -w 1 $AGENT 8094
   if [[ $? -ne 0 ]]; then
     echo
     echo "failed"
