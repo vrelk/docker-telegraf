@@ -41,6 +41,7 @@ ENV INPUT_NET_ENABLED           true
 ENV INPUT_NETSTAT_ENABLED       false
 ENV INPUT_DOCKER_ENABLED        true
 ENV INPUT_LISTENER_ENABLED      false
+ENV INPUT_HAPROXY_ENABLED       false
 
 COPY telegraf.conf.tpl /etc/telegraf/telegraf.conf.tpl
 COPY run.sh /run.sh

@@ -398,3 +398,22 @@
 {% else %}
   # NATS consumer input is disabled
 {% endif %}
+
+# # Read metrics of haproxy, via socket or csv stats page
+{% if INPUT_HAPROXY_ENABLED == "true" %}
+# [[inputs.haproxy]]
+#   ## An array of address to gather stats about. Specify an ip on hostname
+#   ## with optional port. ie localhost, 10.10.3.33:1936, etc.
+#   ## Make sure you specify the complete path to the stats endpoint
+#   ## ie 10.10.3.33:1936/haproxy?stats
+#   #
+#   ## If no servers are specified, then default to 127.0.0.1:1936/haproxy?stats
+#   servers = ["http://myhaproxy.com:1936/haproxy?stats"]
+#   ## Or you can also use local socket
+#   ## servers = ["socket:/run/haproxy/admin.sock"]
+  {% if INPUT_HAPROXY_SERVER is defined %}
+  servers = ["{{ INPUT_HAPROXY_SOCKET }}"]
+  {% endif %}
+{% else %}
+  # haproxy input is disabled
+{% endif %}

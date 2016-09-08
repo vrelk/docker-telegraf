@@ -47,6 +47,7 @@ INPUT_NETSTAT_ENABLED | enable netstat metrics | false |
 INPUT_NET_ENABLED | enable net metrics | true |
 INPUT_LISTENER_ENABLED | enable generic TCP listener | false |
 INPUT_DOCKER_ENABLED | enable Docker metrics | true |
+INPUT_HAPROXY_ENABLED | enable haproxy metrics | false |
 INFLUXDB_URL | Where is your InfluxDB running? | http://localhost:8086 | http://influxdb:8086
 INFLUXDB_USER | InfluxDB username | |
 INFLUXDB_PASS | InfluxDB password | metrics |
@@ -57,6 +58,7 @@ INPUT_NATS_URL | Url of NATS server | nats://localhost:4222 |
 INPUT_NATS_SUBJECT | Subject to consume | telegraf |
 INPUT_LISTENER_PORT | Port of the generic TCP listener | 8094 |
 INPUT_LISTENER_DATA_FORMAT | Data format of the generic TCP listener | json |
+INPUT_HAPROXY_SERVER | haproxy address | 127.0.0.1:1931/haproxy?stats | /var/run/haproxy/admin/sock
 OUTPUT_NATS_URL | URL of NATS server | localhost:4222 |
 OUTPUT_NATS_SUBJECT | NATS Subject for producer messages | telegraf |
 OUTPUT_KAFKA_BROKER_URL | Kafka broker URL in output | localhost:9092 |
