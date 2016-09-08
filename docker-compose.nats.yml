@@ -2,8 +2,8 @@ version: "2"
 services:
 
   nats:
-    #image: appcelerator/nats-streaming:0.2
-    image: nats
+    image: appcelerator/nats-streaming:0.2
+    command: ["-DV"]
     ports:
       - "4222:4222"
       - "8222:8222"
@@ -19,6 +19,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /var/run/utmp:/var/run/utmp:ro
     environment:
+      DEBUG_MODE: "true"
       OUTPUT_INFLUXDB_ENABLED: "false"
       OUTPUT_NATS_ENABLED: "true"
       OUTPUT_KAFKA_ENABLED: "false"
@@ -48,6 +49,7 @@ services:
     volumes:
       - /tmp/docker-compose-telegraf-output:/var/data
     environment:
+      DEBUG_MODE: "true"
       OUTPUT_INFLUXDB_ENABLED: "false"
       OUTPUT_FILE_ENABLED: "true"
       OUTPUT_FILE_PATH: "/var/data/output.dat"

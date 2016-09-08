@@ -8,5 +8,10 @@ RUN apk update && apk upgrade && \
     go get -v github.com/nats-io/nats && \
     cd $GOPATH/src/github.com/nats-io/nats && \
     cp examples/*.go /bin/
+ENV GOPATH=/go
+ENV GOBIN=/go/bin
+RUN cd $GOPATH/src/github.com/nats-io/nats/examples && \
+    mkdir $GOBIN && \
+    go install nats-pub.go
 COPY ./test*.sh /bin/
 CMD ["/bin/test.sh"]

@@ -1,0 +1,20 @@
+diff --git c/plugins/inputs/nats_consumer/nats_consumer.go w/plugins/inputs/nats_consumer/nats_consumer.go
+--- c/plugins/inputs/nats_consumer/nats_consumer.go
++++ w/plugins/inputs/nats_consumer/nats_consumer.go
+@@ -114,4 +114,5 @@ func (n *natsConsumer) Start(acc telegraf.Accumulator) error {
+			n.Subs = append(n.Subs, sub)
+		}
++		n.Conn.Flush()
+	}
+
+
+diff --git c/plugins/outputs/nats/nats.go w/plugins/outputs/nats/nats.go
+--- c/plugins/outputs/nats/nats.go
++++ w/plugins/outputs/nats/nats.go
+@@ -114,5 +114,6 @@ func (n *NATS) Write(metrics []telegraf.Metric) error {
+				pubErr = err
+			}
+		}
++		n.conn.Flush()
+
+		if pubErr != nil {

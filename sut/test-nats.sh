@@ -5,7 +5,7 @@ OUTPUT_FILE=$DATA_DIR/output.dat
 DOCKER_SOCKET=/var/run/docker-host.sock
 CONSUMER=telegraf-consumer
 AGENT=telegraf-agent
-nm=10
+nm=3000
 waitforqueuer=${1:-2}
 export GOPATH=/go
 NATS_HOST=${NATS_HOST:-nats}
@@ -65,7 +65,9 @@ echo "[OK]"
 echo -n "input plugin test, publish messages... "
 r=0
 for i in $(seq $nm); do
-  go run /bin/nats-pub.go -s nats://$NATS_HOST:$NATS_PORT telegraf.in "fake_measurement,host=server$i value=$i 1422568543702900257" 2>&1 | grep -q "Published \[telegraf.in\]"
+  #go run /bin/nats-pub.go -s nats://$NATS_HOST:$NATS_PORT telegraf.in "fake_measurement,host=server$i value=$i 1422568543702900257" 2>&1 | grep -q "Published \[telegraf.in\]"
+  # compiled will be faster
+  /go/bin/nats-pub -s nats://$NATS_HOST:$NATS_PORT telegraf.in "fake_measurement,host=server$i value=$i 1422568543702900257" 2>&1 | grep -q "Published \[telegraf.in\]"
   r=$?
   if [[ $r -ne 0 ]]; then
     break
@@ -76,7 +78,7 @@ if [[ $r -ne 0 ]]; then
   echo "failed ($i/$nm msg sent)"
   exit 1
 fi
-echo " [OK]"
+echo " [OK] ($nm messages)"
 
 echo -n "input plugin test - test output file...                      "
 r="false"
@@ -107,7 +109,7 @@ if [[ $n -ne $nm ]]; then
   exit 1
 fi
 echo "[OK] ($nm msg)"
-grep "^fake_measurement," "$OUTPUT_FILE"
+#grep "^fake_measurement," "$OUTPUT_FILE"
 
 echo -n "output plugin test, run subscriber... "
 go run /bin/nats-sub.go -s nats://$NATS_HOST:$NATS_PORT telegraf.out > $TMPFILE 2>&1  &
@@ -131,7 +133,7 @@ echo " [OK]"
 
 echo -n "output plugin test - send to tcp listener...             "
 for i in $(seq $nm); do
-  echo '{"msg": '$i', "ts": '$(date +%s)'}' | nc $AGENT 8094
+  echo '{"msg": '$i', "ts": '$(date +%s)'}' | nc -w 1 $AGENT 8094
   if [[ $? -ne 0 ]]; then
     echo
     echo "failed"
@@ -152,7 +154,7 @@ if [[ $n -ne $nm ]]; then
   exit 1
 fi
 echo " [OK]"
-egrep "Received on \[telegraf.out\].*:.*'tcp_listener,.* msg=.*'" $TMPFILE
+#egrep "Received on \[telegraf.out\].*:.*'tcp_listener,.* msg=.*'" $TMPFILE
 
 echo "cleaning up output file"
 > "$OUTPUT_FILE"
