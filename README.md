@@ -20,6 +20,9 @@ Variable | Description | Default value | Sample value
 -------- | ----------- | ------------- | ------------
 HOSTNAME | To pass in the docker host's actual hostname | | localhost
 TAG_\<name\> | Adds a tag with the given value to all measurements | | TAG_datacenter=eu-central-1
+METRIC_BUFFER_LIMIT | metrics cache | 1000 |
+DEBUG_MODE | Run telegraf in debug mode | false | true
+QUIET_MODE | Run telegraf in quiet mode | false | true
 INTERVAL | Data collection interval | 10s |
 ROUND_INTERVAL | Round collection interval | true |
 COLLECTION_JITTER | Collection jitter by a random amount | 1s |

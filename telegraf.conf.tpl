@@ -34,7 +34,7 @@
 
   ## Telegraf will cache metric_buffer_limit metrics for each output, and will
   ## flush this buffer on a successful write.
-  metric_buffer_limit = 1000
+  metric_buffer_limit = {{ METRIC_BUFFER_LIMIT | default("1000") }}
   ## Flush the buffer whenever full, regardless of flush_interval.
   flush_buffer_when_full = true
 
@@ -53,9 +53,9 @@
   flush_jitter = "{{ FLUSH_JITTER | default("3s") }}"
 
   ## Run telegraf in debug mode
-  debug = false
+  debug = {{ DEBUG_MODE | default("false") }}
   ## Run telegraf in quiet mode
-  quiet = false
+  quiet = {{ QUIET_MODE | default("false") }}
   ## Override default hostname, if empty use os.Hostname()
   hostname = "{{ HOSTNAME }}"
   ## If set to true, do no set the "host" tag in the telegraf agent.
