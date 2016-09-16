@@ -77,7 +77,7 @@
   ## The target database for metrics (telegraf will create it if not exists).
   database = "telegraf" # required
   ## Retention policy to write to.
-  retention_policy = "default"
+  retention_policy = "{{ INFLUXDB_RETENTION_POLICY | default("default") }}"
   ## Precision of writes, valid values are "ns", "us", "ms", "s", "m", "h".
   ## note: using "s" precision greatly improves InfluxDB compression.
   precision = "s"
