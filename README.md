@@ -49,6 +49,7 @@ INPUT_LISTENER_ENABLED | enable generic TCP listener | false |
 INPUT_DOCKER_ENABLED | enable Docker metrics | true |
 INPUT_HAPROXY_ENABLED | enable haproxy metrics | false |
 INFLUXDB_URL | Where is your InfluxDB running? | http://localhost:8086 | http://influxdb:8086
+INFLUXDB_RETENTION_POLICY | Set the name of the policy | default | ""
 INFLUXDB_USER | InfluxDB username | |
 INFLUXDB_PASS | InfluxDB password | metrics |
 INFLUXDB_TIMEOUT | InfluxDB timetout (in seconds) | 5 |
