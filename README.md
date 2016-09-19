@@ -10,7 +10,7 @@ Most basic form:
 
     docker run -t -v /var/run/docker.sock:/var/run/docker.sock:ro appcelerator/telegraf
 
-Custom InfluxDB location, additional tags, and retention policy for InfluxDB 1.0.0 :
+Custom InfluxDB location, additional tags, and retention policy for InfluxDB 1.0.0:
 
     docker run -t -v /var/run/docker.sock:/var/run/docker.sock:ro -v /var/run/utmp:/var/run/utmp:ro -e INFLUXDB_URL=http://influxdb:8086 -e TAG_datacenter=eu-central-1 -e TAG_type=core -e INFLUXDB_RETENTION_POLICY= appcelerator/telegraf
 
@@ -49,7 +49,7 @@ INPUT_LISTENER_ENABLED | enable generic TCP listener | false |
 INPUT_DOCKER_ENABLED | enable Docker metrics | true |
 INPUT_HAPROXY_ENABLED | enable haproxy metrics | false |
 INFLUXDB_URL | Where is your InfluxDB running? | http://localhost:8086 | http://influxdb:8086
-INFLUXDB_RETENTION_POLICY | Set the name of the policy | default | 
+INFLUXDB_RETENTION_POLICY | Set the name of the policy | default | autogen
 INFLUXDB_USER | InfluxDB username | |
 INFLUXDB_PASS | InfluxDB password | metrics |
 INFLUXDB_TIMEOUT | InfluxDB timetout (in seconds) | 5 |

@@ -18,7 +18,7 @@ echo "Docker:          $INPUT_DOCKER_ENABLED"
 echo "Haproxy:         $INPUT_HAPROXY_ENABLED (${INPUT_HAPROXY_SERVER:+$INPUT_HAPROXY_SERVER})"
 
 echo "Configured outputs:"
-echo "InfluxDB:       $OUTPUT_INFLUXDB_ENABLED ($INFLUXDB_URL)"
+echo "InfluxDB:       $OUTPUT_INFLUXDB_ENABLED ($INFLUXDB_URL, rt=${INFLUXDB_RETENTION_POLICY-default})"
 echo "Cloudwatch:     $OUTPUT_CLOUDWATCH_ENABLED"
 echo "Kafka:          $OUTPUT_KAFKA_ENABLED"
 echo "NATS:           $OUTPUT_NATS_ENABLED"
