@@ -16,7 +16,7 @@ echo "TCP server:      $INPUT_LISTENER_ENABLED"
 echo "Docker:          $INPUT_DOCKER_ENABLED"
 
 echo "Configured outputs:"
-echo "InfluxDB:       $OUTPUT_INFLUXDB_ENABLED ($INFLUXDB_URL)"
+echo "InfluxDB:       $OUTPUT_INFLUXDB_ENABLED ($INFLUXDB_URL, rt=${INFLUXDB_RETENTION_POLICY-default})"
 echo "Cloudwatch:     $OUTPUT_CLOUDWATCH_ENABLED"
 echo "Kafka:          $OUTPUT_KAFKA_ENABLED (${OUTPUT_KAFKA_RETRIES:-3} retries)"
 echo "File:           $OUTPUT_FILE_ENABLED ($OUTPUT_FILE_PATH)"
