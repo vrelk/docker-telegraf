@@ -15,6 +15,7 @@ echo "Net:             $INPUT_NET_ENABLED"
 echo "Netstat:         $INPUT_NETSTAT_ENABLED"
 echo "TCP server:      $INPUT_LISTENER_ENABLED"
 echo "Docker:          $INPUT_DOCKER_ENABLED"
+echo "Haproxy:         $INPUT_HAPROXY_ENABLED (${INPUT_HAPROXY_SERVER:+$INPUT_HAPROXY_SERVER})"
 
 echo "Configured outputs:"
 echo "InfluxDB:       $OUTPUT_INFLUXDB_ENABLED ($INFLUXDB_URL)"

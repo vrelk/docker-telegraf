@@ -401,7 +401,7 @@
 
 # # Read metrics of haproxy, via socket or csv stats page
 {% if INPUT_HAPROXY_ENABLED == "true" %}
-# [[inputs.haproxy]]
+[[inputs.haproxy]]
 #   ## An array of address to gather stats about. Specify an ip on hostname
 #   ## with optional port. ie localhost, 10.10.3.33:1936, etc.
 #   ## Make sure you specify the complete path to the stats endpoint
@@ -412,7 +412,7 @@
 #   ## Or you can also use local socket
 #   ## servers = ["socket:/run/haproxy/admin.sock"]
   {% if INPUT_HAPROXY_SERVER is defined %}
-  servers = ["{{ INPUT_HAPROXY_SOCKET }}"]
+  servers = ["{{ INPUT_HAPROXY_SERVER }}"]
   {% endif %}
 {% else %}
   # haproxy input is disabled
