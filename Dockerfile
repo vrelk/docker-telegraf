@@ -1,7 +1,7 @@
 FROM appcelerator/alpine:20160726
 MAINTAINER Nicolas Degory <ndegory@axway.com>
 
-ENV TELEGRAF_VERSION 1.0.0
+ENV TELEGRAF_VERSION 1.0.1
 
 COPY patch/*.patch tmp/
 RUN apk update && apk upgrade && \
