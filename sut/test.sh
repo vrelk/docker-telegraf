@@ -33,7 +33,7 @@ while [[ "x$r" != "xtrue" ]]; do
     fi
   fi
   ((i++))
-  if [[ $i -gt 20 ]]; then break; fi
+  if [[ $i -gt 60 ]]; then break; fi
 done
 if [[ "x$r" != "xtrue" ]]; then
   echo
@@ -41,50 +41,89 @@ if [[ "x$r" != "xtrue" ]]; then
   _docker_logs
   exit 1
 fi
-echo "[OK]"
+echo "[OK] ($i sec)"
 
 echo -n "test docker measurement...               "
-sleep 1
-grep -q "^docker," "$OUTPUT_FILE"
-if [[ $? -ne 0 ]]; then
+r="false"
+i=0
+while [[ "x$r" != "xtrue" ]]; do
+  sleep 1
+  grep -q "^docker," "$OUTPUT_FILE"
+  if [[ $? -eq 0 ]]; then
+    r="true"
+  fi
+  if [[ $i -gt 45 ]]; then break; fi
+  ((i++))
+done
+if [[ "x$r" != "xtrue" ]]; then
   echo
-  echo "failed"
+  echo "failed (after $i sec)"
   _docker_logs
   exit 1
 fi
-echo "[OK]"
-sleep 1
+echo "[OK] ($i sec)"
+
 echo -n "test docker_container_cpu measurement... "
-grep -q "^docker_container_cpu," "$OUTPUT_FILE"
-if [[ $? -ne 0 ]]; then
+r="false"
+i=0
+while [[ "x$r" != "xtrue" ]]; do
+  sleep 1
+  grep -q "^docker_container_cpu," "$OUTPUT_FILE"
+  if [[ $? -eq 0 ]]; then
+    r="true"
+  fi
+  if [[ $i -gt 15 ]]; then break; fi
+  ((i++))
+done
+if [[ "x$r" != "xtrue" ]]; then
   echo
-  echo "failed"
+  echo "failed (after $i sec)"
   _docker_logs
   exit 1
 fi
-echo "[OK]"
+echo "[OK] ($i sec)"
 echo -n "test docker_container_mem measurement... "
-grep -q "^docker_container_mem," "$OUTPUT_FILE"
-if [[ $? -ne 0 ]]; then
+r="false"
+i=0
+while [[ "x$r" != "xtrue" ]]; do
+  sleep 1
+  grep -q "^docker_container_mem," "$OUTPUT_FILE"
+  if [[ $? -eq 0 ]]; then
+    r="true"
+  fi
+  if [[ $i -gt 15 ]]; then break; fi
+  ((i++))
+done
+if [[ $r -ne 0 ]]; then
   echo
-  echo "failed"
+  echo "failed (after $i sec)"
   _docker_logs
   exit 1
 fi
-echo "[OK]"
+echo "[OK] ($i sec)"
 echo -n "test docker_container_net measurement... "
-grep -q "^docker_container_net," "$OUTPUT_FILE"
-if [[ $? -ne 0 ]]; then
+r="false"
+i=0
+while [[ "x$r" != "xtrue" ]]; do
+  sleep 1
+  grep -q "^docker_container_net," "$OUTPUT_FILE"
+  if [[ $? -eq 0 ]]; then
+    r="true"
+  fi
+  if [[ $i -gt 45 ]]; then break; fi
+  ((i++))
+done
+if [[ "x$r" != "xtrue" ]]; then
   echo
-  echo "failed"
+  echo "failed (after $i sec)"
   _docker_logs
   exit 1
 fi
-echo "[OK]"
+echo "[OK] ($i sec)"
 echo -n "test docker_container_blkio measurement... "
 grep -q "^docker_container_blkio," "$OUTPUT_FILE"
 if [[ $? -ne 0 ]]; then
-  echo "[no data]"
+  echo "[no data, ignore]"
 else
 echo "[OK]"
 fi

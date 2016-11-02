@@ -34,7 +34,7 @@
 
   ## Telegraf will cache metric_buffer_limit metrics for each output, and will
   ## flush this buffer on a successful write.
-  metric_buffer_limit = 1000
+  metric_buffer_limit = {{ METRIC_BUFFER_LIMIT | default("1000") }}
   ## Flush the buffer whenever full, regardless of flush_interval.
   flush_buffer_when_full = true
 
@@ -53,9 +53,9 @@
   flush_jitter = "{{ FLUSH_JITTER | default("3s") }}"
 
   ## Run telegraf in debug mode
-  debug = false
+  debug = {{ DEBUG_MODE | default("false") }}
   ## Run telegraf in quiet mode
-  quiet = false
+  quiet = {{ QUIET_MODE | default("false") }}
   ## Override default hostname, if empty use os.Hostname()
   hostname = "{{ HOSTNAME }}"
   ## If set to true, do no set the "host" tag in the telegraf agent.
@@ -161,7 +161,29 @@
 {% else %}
 # Kafka output is disabled
 {% endif %}
-    
+
+{% if OUTPUT_NATS_ENABLED == "true" %}
+[[outputs.nats]]
+## URLs of NATS servers
+  servers = ["{{ OUTPUT_NATS_URL | default("nats://localhost:4222") }}"]
+  ## Optional credentials
+   # username = ""
+   # password = ""
+   ## NATS subject for producer messages
+   subject = "{{ OUTPUT_NATS_SUBJECT | default("telegraf") }}"
+   ## Optional TLS Config
+   ## CA certificate used to self-sign NATS server(s) TLS certificate(s)
+   # tls_ca = "/etc/telegraf/ca.pem"
+   ## Use TLS but skip chain & host verification
+   # insecure_skip_verify = false
+   ## Data format to output.
+   ## Each data format has it's own unique set of configuration options, read
+   ## more about them here:
+   ## https://github.com/influxdata/telegraf/blob/master/docs/DATA_FORMATS_OUTPUT.md
+   data_format = "influx"
+{% else %}
+ # Nats output is disabled
+{% endif %}
 # # Configuration for the file output
 {% if OUTPUT_FILE_ENABLED == "true" %}
 # # Send telegraf metrics to file(s)
@@ -361,13 +383,13 @@
   ## Use Transport Layer Security
   secure = false
   ## subject(s) to consume
-  subjects = ["{{ INPUTS_NATS_SUBJECT | default("telegraf") }}"]
+  subjects = ["{{ INPUT_NATS_SUBJECT | default("telegraf") }}"]
   ## name a queue group
   queue_group = "telegraf_consumers"
   ## Maximum number of metrics to buffer between collection intervals
   metric_buffer = 100000
 
-  ## Data format to consume. 
+  ## Data format to consume.
 
   ## Each data format has it's own unique set of configuration options, read
   ## more about them here:
@@ -375,4 +397,23 @@
   data_format = "influx"
 {% else %}
   # NATS consumer input is disabled
+{% endif %}
+
+# # Read metrics of haproxy, via socket or csv stats page
+{% if INPUT_HAPROXY_ENABLED == "true" %}
+[[inputs.haproxy]]
+#   ## An array of address to gather stats about. Specify an ip on hostname
+#   ## with optional port. ie localhost, 10.10.3.33:1936, etc.
+#   ## Make sure you specify the complete path to the stats endpoint
+#   ## ie 10.10.3.33:1936/haproxy?stats
+#   #
+#   ## If no servers are specified, then default to 127.0.0.1:1936/haproxy?stats
+#   servers = ["http://myhaproxy.com:1936/haproxy?stats"]
+#   ## Or you can also use local socket
+#   ## servers = ["socket:/run/haproxy/admin.sock"]
+  {% if INPUT_HAPROXY_SERVER is defined %}
+  servers = ["{{ INPUT_HAPROXY_SERVER }}"]
+  {% endif %}
+{% else %}
+  # haproxy input is disabled
 {% endif %}

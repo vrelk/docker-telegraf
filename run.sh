@@ -2,6 +2,7 @@
 
 echo "Configured inputs:"
 echo "Kafka:           $INPUT_KAFKA_ENABLED"
+echo "NATS:            $INPUT_NATS_ENABLED"
 echo "CPU:             $INPUT_CPU_ENABLED"
 echo "Disk:            $INPUT_DISK_ENABLED"
 echo "Disk I/O:        $INPUT_DISKIO_ENABLED"
@@ -14,11 +15,13 @@ echo "Net:             $INPUT_NET_ENABLED"
 echo "Netstat:         $INPUT_NETSTAT_ENABLED"
 echo "TCP server:      $INPUT_LISTENER_ENABLED"
 echo "Docker:          $INPUT_DOCKER_ENABLED"
+echo "Haproxy:         $INPUT_HAPROXY_ENABLED (${INPUT_HAPROXY_SERVER:+$INPUT_HAPROXY_SERVER})"
 
 echo "Configured outputs:"
 echo "InfluxDB:       $OUTPUT_INFLUXDB_ENABLED ($INFLUXDB_URL, rt=${INFLUXDB_RETENTION_POLICY-default})"
 echo "Cloudwatch:     $OUTPUT_CLOUDWATCH_ENABLED"
-echo "Kafka:          $OUTPUT_KAFKA_ENABLED (${OUTPUT_KAFKA_RETRIES:-3} retries)"
+echo "Kafka:          $OUTPUT_KAFKA_ENABLED"
+echo "NATS:           $OUTPUT_NATS_ENABLED"
 echo "File:           $OUTPUT_FILE_ENABLED ($OUTPUT_FILE_PATH)"
 
 if [[ -f /etc/telegraf/telegraf.conf.tpl ]] ; then

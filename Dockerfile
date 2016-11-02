@@ -1,16 +1,16 @@
-FROM appcelerator/alpine:20160726
+FROM appcelerator/alpine:20160928
 MAINTAINER Nicolas Degory <ndegory@axway.com>
 
-ENV TELEGRAF_VERSION 0.13.2
+ENV TELEGRAF_VERSION 1.0.1
 
-COPY issue-amp-70.patch tmp/
+COPY patch/*.patch tmp/
 RUN apk update && apk upgrade && \
     apk --virtual build-deps add go>1.6 git gcc musl-dev make binutils patch && \
     export GOPATH=/go && \
     go get -v github.com/influxdata/telegraf && \
     cd $GOPATH/src/github.com/influxdata/telegraf && \
     git checkout -q --detach "${TELEGRAF_VERSION}" && \
-    patch -l -p1 -i /tmp/issue-amp-70.patch ./plugins/inputs/kafka_consumer/kafka_consumer.go && \
+    for p in /tmp/*.patch; do patch -l -p1 -i $p; done && \
     make && \
     chmod +x $GOPATH/bin/* && \
     mv $GOPATH/bin/* /bin/ && \
@@ -25,6 +25,7 @@ ENV INTERVAL 10s
 ENV OUTPUT_INFLUXDB_ENABLED     true
 ENV OUTPUT_CLOUDWATCH_ENABLED   false
 ENV OUTPUT_KAFKA_ENABLED        false
+ENV OUTPUT_NATS_ENABLED         false
 ENV OUTPUT_FILE_ENABLED         false
 ENV INPUT_KAFKA_ENABLED         false
 ENV INPUT_NATS_ENABLED          false
@@ -40,6 +41,7 @@ ENV INPUT_NET_ENABLED           true
 ENV INPUT_NETSTAT_ENABLED       false
 ENV INPUT_DOCKER_ENABLED        true
 ENV INPUT_LISTENER_ENABLED      false
+ENV INPUT_HAPROXY_ENABLED       false
 
 COPY telegraf.conf.tpl /etc/telegraf/telegraf.conf.tpl
 COPY run.sh /run.sh
