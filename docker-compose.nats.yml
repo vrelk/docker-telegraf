@@ -2,7 +2,7 @@ version: "2"
 services:
 
   nats:
-    image: appcelerator/nats-streaming:0.2
+    image: appcelerator/amp-nats-streaming:0.3.0
     command: ["-DV"]
     ports:
       - "4222:4222"
@@ -70,8 +70,9 @@ services:
       INPUT_NETSTAT_ENABLED: "false"
       INPUT_NET_ENABLED: "false"
       INPUT_LISTENER_ENABLED: "false"
-      INTERVAL: 2s
-      FLUSH_INTERVAL: 2s
+      METRIC_BUFFER_LIMIT: 5000
+      INTERVAL: 3s
+      FLUSH_INTERVAL: 3s
       FLUSH_JITTER: 0s
     entrypoint: ["/run.sh"]
     command: ["-m", "restart"]
