@@ -1,7 +1,7 @@
 FROM appcelerator/alpine:20160928
 MAINTAINER Nicolas Degory <ndegory@axway.com>
 
-ENV TELEGRAF_VERSION 1.1.0-rc1
+ENV TELEGRAF_VERSION 1.1.0
 
 RUN apk update && apk upgrade && \
     apk --virtual build-deps add go git gcc musl-dev make binutils patch && \

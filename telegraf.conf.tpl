@@ -121,10 +121,10 @@
 {% if OUTPUT_CLOUDWATCH_ENABLED == "true" %}
 [[outputs.cloudwatch]]
   ## Amazon REGION
-  region = '{{ CLOUDWATCH_REGION | default("us-east-1") }}'
+  region = "{{ CLOUDWATCH_REGION | default("us-east-1") }}"
 
   ## Namespace for the CloudWatch MetricDatums
-  namespace = '{{ CLOUDWATCH_NAMESPACE | default("InfluxData/Telegraf") }}'
+  namespace = "{{ CLOUDWATCH_NAMESPACE | default("InfluxData/Telegraf") }}"
 {% else %}
 # Cloudwatch output is disabled
 {% endif %}
