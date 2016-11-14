@@ -46,8 +46,8 @@ ENV INPUT_HAPROXY_ENABLED       false
 COPY telegraf.conf.tpl /etc/telegraf/telegraf.conf.tpl
 COPY run.sh /run.sh
 
-ENTRYPOINT ["/bin/sh", "-c"]
-CMD ["/run.sh"]
+ENTRYPOINT ["/run.sh"]
+CMD []
 
 HEALTHCHECK --interval=5s --retries=3 --timeout=3s CMD pidof telegraf
 

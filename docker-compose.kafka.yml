@@ -79,7 +79,6 @@ services:
       INTERVAL: 2s
       FLUSH_INTERVAL: 2s
       FLUSH_JITTER: 0s
-    entrypoint: ["/run.sh"]
     command: ["-m", "restart"]
     depends_on:
       - kafka

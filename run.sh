@@ -64,6 +64,9 @@ if [[ "$mode" = "restart" ]]; then
     ((i++))
     sleep 1
   done
+elif [[ "$mode" = "test" ]]; then
+  echo "INFO - Running telegraf in test mode"
+  exec "$CMD" $CMDARGS -test
 else
   exec "$CMD" $CMDARGS
 fi
