@@ -1,19 +1,19 @@
 FROM appcelerator/alpine:20160928
 MAINTAINER Nicolas Degory <ndegory@axway.com>
 
-ENV TELEGRAF_VERSION 1.0.1
+ENV TELEGRAF_VERSION 1.1.1
 
-COPY patch/*.patch tmp/
 RUN apk update && apk upgrade && \
-    apk --virtual build-deps add go>1.6 git gcc musl-dev make binutils patch && \
+    apk --virtual build-deps add go git gcc musl-dev make binutils patch && \
+    apk -v add curl go@community && \
     export GOPATH=/go && \
     go get -v github.com/influxdata/telegraf && \
     cd $GOPATH/src/github.com/influxdata/telegraf && \
-    git checkout -q --detach "${TELEGRAF_VERSION}" && \
-    for p in /tmp/*.patch; do patch -l -p1 -i $p; done && \
+    if [ $TELEGRAF_VERSION != "master" ]; then git checkout -q --detach "${TELEGRAF_VERSION}" ; fi && \
     make && \
     chmod +x $GOPATH/bin/* && \
     mv $GOPATH/bin/* /bin/ && \
+    apk del binutils-libs binutils gmp isl libgomp libatomic libgcc pkgconf pkgconfig mpfr3 mpc1 libstdc++ gcc go && \
     apk del build-deps && \
     cd / && rm -rf /var/cache/apk/* $GOPATH && \
     mkdir -p /etc/telegraf
@@ -46,8 +46,8 @@ ENV INPUT_HAPROXY_ENABLED       false
 COPY telegraf.conf.tpl /etc/telegraf/telegraf.conf.tpl
 COPY run.sh /run.sh
 
-ENTRYPOINT ["/bin/sh", "-c"]
-CMD ["/run.sh"]
+ENTRYPOINT ["/run.sh"]
+CMD []
 
 HEALTHCHECK --interval=5s --retries=3 --timeout=3s CMD pidof telegraf
 

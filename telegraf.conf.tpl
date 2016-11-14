@@ -32,9 +32,17 @@
   ## ie, if interval="10s" then always collect on :00, :10, :20, etc.
   round_interval = {{ ROUND_INTERVAL | default("true") }}
 
-  ## Telegraf will cache metric_buffer_limit metrics for each output, and will
-  ## flush this buffer on a successful write.
-  metric_buffer_limit = {{ METRIC_BUFFER_LIMIT | default("1000") }}
+  ## Telegraf will send metrics to outputs in batches of at most
+  ## metric_batch_size metrics.
+  ## This controls the size of writes that Telegraf sends to output plugins.
+  metric_batch_size = {{ METRIC_BATCH_SIZE | default("1000") }}
+
+  ## For failed writes, telegraf will cache metric_buffer_limit metrics for each
+  ## output, and will flush this buffer on a successful write. Oldest metrics
+  ## are dropped first when this buffer fills.
+  ## This buffer only fills when writes fail to output plugin(s).
+  metric_buffer_limit = {{ METRIC_BUFFER_LIMIT | default("10000") }}
+
   ## Flush the buffer whenever full, regardless of flush_interval.
   flush_buffer_when_full = true
 
@@ -52,10 +60,20 @@
   ## ie, a jitter of 5s and interval 10s means flushes will happen every 10-15s
   flush_jitter = "{{ FLUSH_JITTER | default("3s") }}"
 
-  ## Run telegraf in debug mode
+  ## By default, precision will be set to the same timestamp order as the
+  ## collection interval, with the maximum being 1s.
+  ## Precision will NOT be used for service inputs, such as logparser and statsd.
+  ## Valid values are "ns", "us", "ms", "s".
+  precision = ""
+
+  ## Logging configuration:
+  ## Run telegraf with debug log messages.
   debug = {{ DEBUG_MODE | default("false") }}
-  ## Run telegraf in quiet mode
+  ## Run telegraf in quiet mode (error log messages only).
   quiet = {{ QUIET_MODE | default("false") }}
+  ## Specify the log file name. The empty string means to log to stderr.
+  logfile = ""
+
   ## Override default hostname, if empty use os.Hostname()
   hostname = "{{ HOSTNAME }}"
   ## If set to true, do no set the "host" tag in the telegraf agent.
@@ -81,6 +99,8 @@
   ## Precision of writes, valid values are "ns", "us", "ms", "s", "m", "h".
   ## note: using "s" precision greatly improves InfluxDB compression.
   precision = "s"
+  ## Write consistency (clusters only), can be: "any", "one", "quorum", "all"
+  write_consistency = "any"
 
   ## Write timeout (for the InfluxDB client), formatted as a string.
   ## If not provided, will default to 5s. 0s means no timeout (not recommended).
@@ -101,10 +121,10 @@
 {% if OUTPUT_CLOUDWATCH_ENABLED == "true" %}
 [[outputs.cloudwatch]]
   ## Amazon REGION
-  region = '{{ CLOUDWATCH_REGION | default("us-east-1") }}'
+  region = "{{ CLOUDWATCH_REGION | default("us-east-1") }}"
 
   ## Namespace for the CloudWatch MetricDatums
-  namespace = '{{ CLOUDWATCH_NAMESPACE | default("InfluxData/Telegraf") }}'
+  namespace = "{{ CLOUDWATCH_NAMESPACE | default("InfluxData/Telegraf") }}"
 {% else %}
 # Cloudwatch output is disabled
 {% endif %}
@@ -174,7 +194,7 @@
    ## Optional TLS Config
    ## CA certificate used to self-sign NATS server(s) TLS certificate(s)
    # tls_ca = "/etc/telegraf/ca.pem"
-   ## Use TLS but skip chain & host verification
+   ## Use TLS but skip chain and host verification
    # insecure_skip_verify = false
    ## Data format to output.
    ## Each data format has it's own unique set of configuration options, read
@@ -212,6 +232,8 @@
   percpu = true
   ## Whether to report total system cpu stats or not
   totalcpu = true
+  ## If true, collect raw CPU time metrics.
+  collect_cpu_time = false
   ## Comment this line if you want the raw CPU time metrics
   fielddrop = ["time_*"]
 {% else %}
@@ -239,8 +261,8 @@
   ## disk partitions.
   ## Setting devices will restrict the stats to the specified devices.
   # devices = ["sda", "sdb"]
-  ## Uncomment the following line if you do not need disk serial numbers.
-  # skip_serial_number = true
+  ## Uncomment the following line if you need disk serial numbers.
+  # skip_serial_number = false
 {% else %}
   # Disk IO input is disabled
 {% endif %}
@@ -277,7 +299,7 @@
   # Swap input is disabled
 {% endif %}
 
-# Read metrics about system load & uptime
+# Read metrics about system load and uptime
 {% if INPUT_SYSTEM_ENABLED == "true" %}
 [[inputs.system]]
   # no configuration
@@ -301,7 +323,14 @@
 # # Read metrics from one or more commands that can output to stdout
 # [[inputs.exec]]
 #   ## Commands array
-#   commands = ["/tmp/test.sh", "/usr/bin/mycollector --foo=bar"]
+#   commands = [
+#     "/tmp/test.sh",
+#     "/usr/bin/mycollector --foo=bar",
+#     "/tmp/collect_*.sh"
+#   ]
+#
+#   ## Timeout for each command to complete.
+#   timeout = "5s"
 #
 #   ## measurement name suffix (for separating different commands)
 #   name_suffix = "_mycollector"
@@ -312,6 +341,58 @@
 #   ## https://github.com/influxdata/telegraf/blob/master/docs/DATA_FORMATS_INPUT.md
 #   data_format = "influx"
 
+
+# # Read stats about given file(s)
+# [[inputs.filestat]]
+#   ## Files to gather stats about.
+#   ## These accept standard unix glob matching rules, but with the addition of
+#   ## ** as a "super asterisk". ie:
+#   ##   "/var/log/**.log"  -> recursively find all .log files in /var/log
+#   ##   "/var/log/*/*.log" -> find all .log files with a parent dir in /var/log
+#   ##   "/var/log/apache.log" -> just tail the apache log file
+#   ##
+#   ## See https://github.com/gobwas/glob for more examples
+#   ##
+#   files = ["/var/log/**.log"]
+#   ## If true, read the entire file and calculate an md5 checksum.
+#   md5 = false
+
+
+# # Read flattened metrics from one or more GrayLog HTTP endpoints
+# [[inputs.graylog]]
+#   ## API endpoint, currently supported API:
+#   ##
+#   ##   - multiple  (Ex http://<host>:12900/system/metrics/multiple)
+#   ##   - namespace (Ex http://<host>:12900/system/metrics/namespace/{namespace})
+#   ##
+#   ## For namespace endpoint, the metrics array will be ignored for that call.
+#   ## Endpoint can contain namespace and multiple type calls.
+#   ##
+#   ## Please check http://[graylog-server-ip]:12900/api-browser for full list
+#   ## of endpoints
+#   servers = [
+#     "http://[graylog-server-ip]:12900/system/metrics/multiple",
+#   ]
+#
+#   ## Metrics list
+#   ## List of metrics can be found on Graylog webservice documentation.
+#   ## Or by hitting the the web service api at:
+#   ##   http://[graylog-host]:12900/system/metrics
+#   metrics = [
+#     "jvm.cl.loaded",
+#     "jvm.memory.pools.Metaspace.committed"
+#   ]
+#
+#   ## Username and password
+#   username = ""
+#   password = ""
+#
+#   ## Optional SSL Config
+#   # ssl_ca = "/etc/telegraf/ca.pem"
+#   # ssl_cert = "/etc/telegraf/cert.pem"
+#   # ssl_key = "/etc/telegraf/key.pem"
+#   ## Use SSL but skip chain and host verification
+#   # insecure_skip_verify = false
 
 {% if INPUT_NET_ENABLED == "true" %}
 [[inputs.net]]
@@ -388,6 +469,10 @@
   queue_group = "telegraf_consumers"
   ## Maximum number of metrics to buffer between collection intervals
   metric_buffer = 100000
+  ## Sets the limits for pending msgs and bytes for each subscription
+  ## These shouldn't need to be adjusted except in very high throughput scenarios
+  # pending_message_limit = 65536
+  # pending_bytes_limit = 67108864
 
   ## Data format to consume.
 
@@ -399,18 +484,28 @@
   # NATS consumer input is disabled
 {% endif %}
 
+#
+#   ## Data format to consume.
+#   ## Each data format has it's own unique set of configuration options, read
+#   ## more about them here:
+#   ## https://github.com/influxdata/telegraf/blob/master/docs/DATA_FORMATS_INPUT.md
+#   data_format = "influx"
+
 # # Read metrics of haproxy, via socket or csv stats page
 {% if INPUT_HAPROXY_ENABLED == "true" %}
 [[inputs.haproxy]]
 #   ## An array of address to gather stats about. Specify an ip on hostname
 #   ## with optional port. ie localhost, 10.10.3.33:1936, etc.
 #   ## Make sure you specify the complete path to the stats endpoint
-#   ## ie 10.10.3.33:1936/haproxy?stats
+#   ## including the protocol, ie http://10.10.3.33:1936/haproxy?stats
 #   #
 #   ## If no servers are specified, then default to 127.0.0.1:1936/haproxy?stats
 #   servers = ["http://myhaproxy.com:1936/haproxy?stats"]
-#   ## Or you can also use local socket
-#   ## servers = ["socket:/run/haproxy/admin.sock"]
+#   ##
+#   ## You can also use local socket with standard wildcard globbing.
+#   ## Server address not starting with 'http' will be treated as a possible
+#   ## socket, so both examples below are valid.
+#   ## servers = ["socket:/run/haproxy/admin.sock", "/run/haproxy/*.sock"]
   {% if INPUT_HAPROXY_SERVER is defined %}
   servers = ["{{ INPUT_HAPROXY_SERVER }}"]
   {% endif %}

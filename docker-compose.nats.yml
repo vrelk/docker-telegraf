@@ -74,7 +74,6 @@ services:
       INTERVAL: 3s
       FLUSH_INTERVAL: 3s
       FLUSH_JITTER: 0s
-    entrypoint: ["/run.sh"]
     command: ["-m", "restart"]
     depends_on:
       - nats
