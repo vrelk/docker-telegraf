@@ -26,7 +26,7 @@ echo "File:           $OUTPUT_FILE_ENABLED ($OUTPUT_FILE_PATH)"
 
 if [[ -f /etc/telegraf/telegraf.conf.tpl ]] ; then
     echo "Generating /etc/telegraf/telegraf.conf from template..."
-    envtpl /etc/telegraf/telegraf.conf.tpl
+    envtpl -o /etc/telegraf/telegraf.conf /etc/telegraf/telegraf.conf.tpl && rm /etc/telegraf/telegraf.conf.tpl
 else
     if [[ -f /etc/telegraf/telegraf.conf ]] ; then
         echo "/etc/telegraf/telegraf.conf already exists. Nothing to do."
@@ -35,10 +35,13 @@ else
     fi
 fi
 
+config=0
 mode="single"
 timer=""
-while getopts ":m:r:" opt; do
+while getopts ":m:r:c" opt; do
   case $opt in
+    c) config=1
+       ;;
     r)
       timer=$((RANDOM % $OPTARG)) 
       echo "INFO - requested timer before telegraf start ($timer)"
@@ -56,6 +59,9 @@ if [[ -n "$timer" ]]; then
 fi
 CMD="/bin/telegraf"
 CMDARGS="-config /etc/telegraf/telegraf.conf"
+if [[ $config -eq 1 ]]; then
+  exec "$CMD" $CMDARGS config
+fi
 if [[ "$mode" = "restart" ]]; then
   echo "WARNING - restart option is for debug only"
   i=0

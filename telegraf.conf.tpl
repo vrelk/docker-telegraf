@@ -20,28 +20,28 @@
   # rack = "1a"
   ## Environment variables can be used as tags, and throughout the config file
   # user = "$USER"
-  {% for key, value in environment('TAG_') %}{{ key }}="{{ value }}"
-  {% endfor %}
+  {{ range $key, $value := environment "TAG_" }}{{ $key }}="{{ $value }}"
+  {{ end -}}
 
 
 # Configuration for telegraf agent
 [agent]
   ## Default data collection interval for all inputs
-  interval = "{{ INTERVAL | default("10s") }}"
+  interval = "{{ .INTERVAL | default "10s" }}"
   ## Rounds collection interval to 'interval'
   ## ie, if interval="10s" then always collect on :00, :10, :20, etc.
-  round_interval = {{ ROUND_INTERVAL | default("true") }}
+  round_interval = {{ .ROUND_INTERVAL | default "true"  }}
 
   ## Telegraf will send metrics to outputs in batches of at most
   ## metric_batch_size metrics.
   ## This controls the size of writes that Telegraf sends to output plugins.
-  metric_batch_size = {{ METRIC_BATCH_SIZE | default("1000") }}
+  metric_batch_size = {{ .METRIC_BATCH_SIZE | default "1000" }}
 
   ## For failed writes, telegraf will cache metric_buffer_limit metrics for each
   ## output, and will flush this buffer on a successful write. Oldest metrics
   ## are dropped first when this buffer fills.
   ## This buffer only fills when writes fail to output plugin(s).
-  metric_buffer_limit = {{ METRIC_BUFFER_LIMIT | default("10000") }}
+  metric_buffer_limit = {{ .METRIC_BUFFER_LIMIT | default "10000" }}
 
   ## Flush the buffer whenever full, regardless of flush_interval.
   flush_buffer_when_full = true
@@ -50,15 +50,15 @@
   ## Each plugin will sleep for a random time within jitter before collecting.
   ## This can be used to avoid many plugins querying things like sysfs at the
   ## same time, which can have a measurable effect on the system.
-  collection_jitter = "{{ COLLECTION_JITTER | default("1s") }}"
+  collection_jitter = "{{ .COLLECTION_JITTER | default "1s" }}"
 
   ## Default flushing interval for all outputs. You shouldn't set this below
   ## interval. Maximum flush_interval will be flush_interval + flush_jitter
-  flush_interval = "{{ FLUSH_INTERVAL | default("10s") }}"
+  flush_interval = "{{ .FLUSH_INTERVAL | default "10s" }}"
   ## Jitter the flush interval by a random amount. This is primarily to avoid
   ## large write spikes for users running a large number of telegraf instances.
   ## ie, a jitter of 5s and interval 10s means flushes will happen every 10-15s
-  flush_jitter = "{{ FLUSH_JITTER | default("3s") }}"
+  flush_jitter = "{{ .FLUSH_JITTER | default "3s" }}"
 
   ## By default, precision will be set to the same timestamp order as the
   ## collection interval, with the maximum being 1s.
@@ -68,14 +68,14 @@
 
   ## Logging configuration:
   ## Run telegraf with debug log messages.
-  debug = {{ DEBUG_MODE | default("false") }}
+  debug = {{ .DEBUG_MODE | default "false" }}
   ## Run telegraf in quiet mode (error log messages only).
-  quiet = {{ QUIET_MODE | default("false") }}
+  quiet = {{ .QUIET_MODE | default "false" }}
   ## Specify the log file name. The empty string means to log to stderr.
   logfile = ""
 
   ## Override default hostname, if empty use os.Hostname()
-  hostname = "{{ HOSTNAME }}"
+  hostname = "{{ .HOSTNAME }}"
   ## If set to true, do no set the "host" tag in the telegraf agent.
   omit_hostname = false
 
@@ -85,17 +85,17 @@
 ###############################################################################
 
 # Configuration for influxdb server to send metrics to
-{% if OUTPUT_INFLUXDB_ENABLED == "true" %}
+{{ if eq .OUTPUT_INFLUXDB_ENABLED "true" }}
 [[outputs.influxdb]]
   ## The full HTTP or UDP endpoint URL for your InfluxDB instance.
   ## Multiple urls can be specified as part of the same cluster,
   ## this means that only ONE of the urls will be written to each interval.
   # urls = ["udp://localhost:8089"] # UDP endpoint example
-  urls = ["{{ INFLUXDB_URL }}"] # required
+  urls = ["{{ .INFLUXDB_URL }}"] # required
   ## The target database for metrics (telegraf will create it if not exists).
   database = "telegraf" # required
   ## Retention policy to write to.
-  retention_policy = "{{ INFLUXDB_RETENTION_POLICY | default("default") }}"
+  retention_policy = "{{ .INFLUXDB_RETENTION_POLICY | default "default" }}"
   ## Precision of writes, valid values are "ns", "us", "ms", "s", "m", "h".
   ## note: using "s" precision greatly improves InfluxDB compression.
   precision = "s"
@@ -104,38 +104,38 @@
 
   ## Write timeout (for the InfluxDB client), formatted as a string.
   ## If not provided, will default to 5s. 0s means no timeout (not recommended).
-  timeout = "{{ INFLUXDB_TIMEOUT | default("5") }}s"
-  {% if INFLUXDB_USER is defined %}
-  username = "{{ INFLUXDB_USER }}"
-  password = "{{ INFLUXDB_PASS | default("metrics") }}"
-  {% endif %}
+  timeout = "{{ .INFLUXDB_TIMEOUT | default "5" }}s"
+  {{ if .INFLUXDB_USER }}
+  username = "{{ .INFLUXDB_USER }}"
+  password = "{{ .INFLUXDB_PASS | default "metrics" }}"
+  {{ end }}
   ## Set the user agent for HTTP POSTs (can be useful for log differentiation)
   # user_agent = "telegraf"
   ## Set UDP payload size, defaults to InfluxDB UDP Client default (512 bytes)
   # udp_payload = 512
-{% else %}
+{{ else }}
 # InfluxDB output is disabled
-{% endif %}
+{{ end }}
 
 # Configuration for AWS CloudWatch output.
-{% if OUTPUT_CLOUDWATCH_ENABLED == "true" %}
+{{ if eq .OUTPUT_CLOUDWATCH_ENABLED "true" }}
 [[outputs.cloudwatch]]
   ## Amazon REGION
-  region = "{{ CLOUDWATCH_REGION | default("us-east-1") }}"
+  region = "{{ .CLOUDWATCH_REGION | default "us-east-1" }}"
 
   ## Namespace for the CloudWatch MetricDatums
-  namespace = "{{ CLOUDWATCH_NAMESPACE | default("InfluxData/Telegraf") }}"
-{% else %}
+  namespace = "{{ .CLOUDWATCH_NAMESPACE | default "InfluxData/Telegraf" }}"
+{{ else }}
 # Cloudwatch output is disabled
-{% endif %}
+{{ end }}
 
 # # Configuration for the Kafka server to send metrics to
-{% if OUTPUT_KAFKA_ENABLED == "true" %}
+{{ if eq .OUTPUT_KAFKA_ENABLED "true" }}
 [[outputs.kafka]]
   ## URLs of kafka brokers
-  brokers = ["{{ OUTPUT_KAFKA_BROKER_URL | default("localhost:9092") }}"]
+  brokers = ["{{ .OUTPUT_KAFKA_BROKER_URL | default "localhost:9092" }}"]
   ## Kafka topic for producer messages
-  topic = "{{ OUTPUT_KAFKA_TOPIC | default("telegraf") }}"
+  topic = "{{ .OUTPUT_KAFKA_TOPIC | default "telegraf" }}"
   ## Telegraf tag to use as a routing key
   ##  ie, if this tag exists, it's value will be used as the routing key
   routing_tag = "host"
@@ -164,7 +164,7 @@
   required_acks = -1
 
   ##  The total number of times to retry sending a message
-  max_retry = {{ OUTPUT_KAFKA_RETRIES | default("3") }}
+  max_retry = {{ .OUTPUT_KAFKA_RETRIES | default "3" }}
 
   ## Optional SSL Config
   # ssl_ca = "/etc/telegraf/ca.pem"
@@ -177,20 +177,20 @@
   ## Each data format has it's own unique set of configuration options, read
   ## more about them here:
   ## https://github.com/influxdata/telegraf/blob/master/docs/DATA_FORMATS_OUTPUT.md
-  data_format = "{{ KAFKA_DATA_FORMAT | default("influx") }}"
-{% else %}
+  data_format = "{{ .KAFKA_DATA_FORMAT | default "influx" }}"
+{{ else }}
 # Kafka output is disabled
-{% endif %}
+{{ end }}
 
-{% if OUTPUT_NATS_ENABLED == "true" %}
+{{ if eq .OUTPUT_NATS_ENABLED  "true" }}
 [[outputs.nats]]
 ## URLs of NATS servers
-  servers = ["{{ OUTPUT_NATS_URL | default("nats://localhost:4222") }}"]
+  servers = ["{{ .OUTPUT_NATS_URL | default "nats://localhost:4222" }}"]
   ## Optional credentials
    # username = ""
    # password = ""
    ## NATS subject for producer messages
-   subject = "{{ OUTPUT_NATS_SUBJECT | default("telegraf") }}"
+   subject = "{{ .OUTPUT_NATS_SUBJECT | default "telegraf" }}"
    ## Optional TLS Config
    ## CA certificate used to self-sign NATS server(s) TLS certificate(s)
    # tls_ca = "/etc/telegraf/ca.pem"
@@ -201,16 +201,16 @@
    ## more about them here:
    ## https://github.com/influxdata/telegraf/blob/master/docs/DATA_FORMATS_OUTPUT.md
    data_format = "influx"
-{% else %}
+{{ else }}
  # Nats output is disabled
-{% endif %}
+{{ end }}
 # # Configuration for the file output
-{% if OUTPUT_FILE_ENABLED == "true" %}
+{{ if eq .OUTPUT_FILE_ENABLED "true" }}
 # # Send telegraf metrics to file(s)
 [[outputs.file]]
 #   ## Files to write to, "stdout" is a specially handled file.
 #   files = ["stdout", "/tmp/metrics.out"]
-   files = ["{{ OUTPUT_FILE_PATH | default("stdout") }}"]
+   files = ["{{ .OUTPUT_FILE_PATH | default "stdout" }}"]
 #
 #   ## Data format to output.
 #   ## Each data format has it's own unique set of configuration options, read
@@ -218,15 +218,15 @@
 #   ## https://github.com/influxdata/telegraf/blob/master/docs/DATA_FORMATS_OUTPUT.md
    data_format = "influx"
 #   data_format = "json"
-{% else %}
+{{ else }}
 # File output is disabled
-{% endif %}
+{{ end }}
 ###############################################################################
 #                            INPUT PLUGINS                                    #
 ###############################################################################
 
 # Read metrics about cpu usage
-{% if INPUT_CPU_ENABLED == "true" %}
+{{ if eq .INPUT_CPU_ENABLED "true" }}
 [[inputs.cpu]]
   ## Whether to report per-cpu stats or not
   percpu = true
@@ -236,12 +236,12 @@
   collect_cpu_time = false
   ## Comment this line if you want the raw CPU time metrics
   fielddrop = ["time_*"]
-{% else %}
+{{ else }}
   # CPU input is disabled
-{% endif %}
+{{ end }}
 
 # Read metrics about disk usage by mount point
-{% if INPUT_DISK_ENABLED == "true" %}
+{{ if eq .INPUT_DISK_ENABLED "true" }}
 [[inputs.disk]]
   ## By default, telegraf gather stats for all mountpoints.
   ## Setting mountpoints will restrict the stats to the specified mountpoints.
@@ -250,12 +250,12 @@
   ## Ignore some mountpoints by filesystem type. For example (dev)tmpfs (usually
   ## present on /run, /var/run, /dev/shm or /dev).
   ignore_fs = ["tmpfs", "devtmpfs"]
-{% else %}
+{{ else }}
   # Disk input is disabled
-{% endif %}
+{{ end }}
 
 # Read metrics about disk IO by device
-{% if INPUT_DISKIO_ENABLED == "true" %}
+{{ if eq .INPUT_DISKIO_ENABLED "true" }}
 [[inputs.diskio]]
   ## By default, telegraf will gather stats for all devices including
   ## disk partitions.
@@ -263,52 +263,52 @@
   # devices = ["sda", "sdb"]
   ## Uncomment the following line if you need disk serial numbers.
   # skip_serial_number = false
-{% else %}
+{{ else }}
   # Disk IO input is disabled
-{% endif %}
+{{ end }}
 
 # Get kernel statistics from /proc/stat
-{% if INPUT_KERNEL_ENABLED == "true" %}
+{{ if eq .INPUT_KERNEL_ENABLED "true" }}
 [[inputs.kernel]]
   # no configuration
-{% else %}
+{{ else }}
   # Kernel input is disabled
-{% endif %}
+{{ end }}
 
 # Read metrics about memory usage
-{% if INPUT_MEM_ENABLED == "true" %}
+{{ if eq .INPUT_MEM_ENABLED "true" }}
 [[inputs.mem]]
   # no configuration
-{% else %}
+{{ else }}
   # Memory input is disabled
-{% endif %}
+{{ end }}
 
 # Get the number of processes and group them by status
-{% if INPUT_PROCESS_ENABLED == "true" %}
+{{ if eq .INPUT_PROCESS_ENABLED "true" }}
 [[inputs.processes]]
   # no configuration
-{% else %}
+{{ else }}
   # Process input is disabled
-{% endif %}
+{{ end }}
 
 # Read metrics about swap memory usage
-{% if INPUT_SWAP_ENABLED == "true" %}
+{{ if eq .INPUT_SWAP_ENABLED "true" }}
 [[inputs.swap]]
   # no configuration
-{% else %}
+{{ else }}
   # Swap input is disabled
-{% endif %}
+{{ end }}
 
 # Read metrics about system load and uptime
-{% if INPUT_SYSTEM_ENABLED == "true" %}
+{{ if eq .INPUT_SYSTEM_ENABLED "true" }}
 [[inputs.system]]
   # no configuration
-{% else %}
+{{ else }}
   # System input is disabled
-{% endif %}
+{{ end }}
 
 # Read metrics about docker containers
-{% if INPUT_DOCKER_ENABLED == "true" %}
+{{ if eq .INPUT_DOCKER_ENABLED "true" }}
 [[inputs.docker]]
   ## Docker Endpoint
   ##   To use TCP, set endpoint = "tcp://[ip]:[port]"
@@ -316,9 +316,9 @@
   endpoint = "unix:///var/run/docker.sock"
   ## Only collect metrics for these containers, collect all if empty
   container_names = []
-{% else %}
+{{ else }}
   # Docker input is disabled
-{% endif %}
+{{ end }}
 
 # # Read metrics from one or more commands that can output to stdout
 # [[inputs.exec]]
@@ -394,29 +394,29 @@
 #   ## Use SSL but skip chain and host verification
 #   # insecure_skip_verify = false
 
-{% if INPUT_NET_ENABLED == "true" %}
+{{ if eq .INPUT_NET_ENABLED "true" }}
 [[inputs.net]]
   # no configuration
-{% else %}
+{{ else }}
   # Net input is disabled
-{% endif %}
+{{ end }}
 
 # # Read TCP metrics such as established, time wait and sockets counts.
-{% if INPUT_NETSTAT_ENABLED == "true" %}
+{{ if eq .INPUT_NETSTAT_ENABLED "true" }}
 [[inputs.netstat]]
   # no configuration
-{% else %}
+{{ else }}
   # Netstat input is disabled
-{% endif %}
+{{ end }}
 
 # Read metrics from Kafka topic(s)
-{% if INPUT_KAFKA_ENABLED == "true" %}
+{{ if eq .INPUT_KAFKA_ENABLED "true" }}
 [[inputs.kafka_consumer]]
   ## topic(s) to consume
-  topics = [ "{{ INPUT_KAFKA_TOPIC | default("telegraf") }}" ]
+  topics = [ "{{ .INPUT_KAFKA_TOPIC | default "telegraf" }}" ]
   ## an array of Zookeeper connection strings
-  zookeeper_peers = ["{{ INPUT_KAFKA_ZOOKEEPER_PEER | default("zookeeper:2181") }}"]
-  zookeeper_chroot = "{{ INPUT_KAFKA_ZOOKEEPER_CHROOT | default("") }}"
+  zookeeper_peers = ["{{ .INPUT_KAFKA_ZOOKEEPER_PEER | default "zookeeper:2181" }}"]
+  zookeeper_chroot = "{{ .INPUT_KAFKA_ZOOKEEPER_CHROOT | default "" }}"
   ## the name of the consumer group
   consumer_group = "telegraf_metrics_consumers"
   ## Maximum number of metrics to buffer between collection intervals
@@ -429,16 +429,16 @@
   ## Each data format has it's own unique set of configuration options, read
   ## more about them here:
   ## https://github.com/influxdata/telegraf/blob/master/docs/DATA_FORMATS_INPUT.md
-  data_format = "{{ KAFKA_DATA_FORMAT | default("influx") }}"
-{% else %}
+  data_format = "{{ .KAFKA_DATA_FORMAT | default "influx" }}"
+{{ else }}
   # Kafka input is disabled
-{% endif %}
+{{ end }}
 
 # Generic TCP listener
-{% if INPUT_LISTENER_ENABLED == "true" %}
+{{ if eq .INPUT_LISTENER_ENABLED "true" }}
 [[inputs.tcp_listener]]
   ## Address and port to host TCP listener on
-  service_address = ":{{ INPUT_LISTENER_PORT | default("8094") }}"
+  service_address = ":{{ .INPUT_LISTENER_PORT | default "8094" }}"
 
   ## Number of TCP messages allowed to queue up. Once filled, the
   ## TCP listener will start dropping packets.
@@ -451,20 +451,20 @@
   ## Each data format has it's own unique set of configuration options, read
   ## more about them here:
   ## https://github.com/influxdata/telegraf/blob/master/docs/DATA_FORMATS_INPUT.md
-  data_format = "{{ INPUT_LISTENER_DATA_FORMAT | default("json") }}"
-{% else %}
+  data_format = "{{ .INPUT_LISTENER_DATA_FORMAT | default "json" }}"
+{{ else }}
   # TCP listener input is disabled
-{% endif %}
+{{ end }}
 
 # Read metrics from NATS subject(s)
-{% if INPUT_NATS_ENABLED == "true" %}
+{{ if eq .INPUT_NATS_ENABLED "true" }}
 [[inputs.nats_consumer]]
   ## urls of NATS servers
-  servers = ["{{ INPUT_NATS_URL | default("nats://localhost:4222") }}"]
+  servers = ["{{ .INPUT_NATS_URL | default "nats://localhost:4222" }}"]
   ## Use Transport Layer Security
   secure = false
   ## subject(s) to consume
-  subjects = ["{{ INPUT_NATS_SUBJECT | default("telegraf") }}"]
+  subjects = ["{{ .INPUT_NATS_SUBJECT | default "telegraf" }}"]
   ## name a queue group
   queue_group = "telegraf_consumers"
   ## Maximum number of metrics to buffer between collection intervals
@@ -480,9 +480,9 @@
   ## more about them here:
   ## https://github.com/influxdata/telegraf/blob/master/docs/DATA_FORMATS_INPUT.md
   data_format = "influx"
-{% else %}
+{{ else }}
   # NATS consumer input is disabled
-{% endif %}
+{{ end }}
 
 #
 #   ## Data format to consume.
@@ -492,7 +492,7 @@
 #   data_format = "influx"
 
 # # Read metrics of haproxy, via socket or csv stats page
-{% if INPUT_HAPROXY_ENABLED == "true" %}
+{{ if eq .INPUT_HAPROXY_ENABLED "true" }}
 [[inputs.haproxy]]
 #   ## An array of address to gather stats about. Specify an ip on hostname
 #   ## with optional port. ie localhost, 10.10.3.33:1936, etc.
@@ -506,9 +506,9 @@
 #   ## Server address not starting with 'http' will be treated as a possible
 #   ## socket, so both examples below are valid.
 #   ## servers = ["socket:/run/haproxy/admin.sock", "/run/haproxy/*.sock"]
-  {% if INPUT_HAPROXY_SERVER is defined %}
-  servers = ["{{ INPUT_HAPROXY_SERVER }}"]
-  {% endif %}
-{% else %}
+  {{ if .INPUT_HAPROXY_SERVER }}
+  servers = ["{{ .INPUT_HAPROXY_SERVER }}"]
+  {{ end }}
+{{ else }}
   # haproxy input is disabled
-{% endif %}
+{{ end }}
