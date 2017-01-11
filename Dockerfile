@@ -1,11 +1,10 @@
-FROM appcelerator/alpine:20160928
+FROM appcelerator/alpine:3.5.1
 MAINTAINER Nicolas Degory <ndegory@axway.com>
 
-ENV TELEGRAF_VERSION 1.1.1
+ENV TELEGRAF_VERSION 1.1.2
 
 RUN apk update && apk upgrade && \
-    apk --virtual build-deps add go git gcc musl-dev make binutils patch && \
-    apk -v add curl go@community && \
+    apk --virtual build-deps add go git gcc musl-dev make binutils patch go && \
     export GOPATH=/go && \
     go get -v github.com/influxdata/telegraf && \
     cd $GOPATH/src/github.com/influxdata/telegraf && \
@@ -13,7 +12,6 @@ RUN apk update && apk upgrade && \
     make && \
     chmod +x $GOPATH/bin/* && \
     mv $GOPATH/bin/* /bin/ && \
-    apk del binutils-libs binutils gmp isl libgomp libatomic libgcc pkgconf pkgconfig mpfr3 mpc1 libstdc++ gcc go && \
     apk del build-deps && \
     cd / && rm -rf /var/cache/apk/* $GOPATH && \
     mkdir -p /etc/telegraf
@@ -50,8 +48,3 @@ ENTRYPOINT ["/run.sh"]
 CMD []
 
 HEALTHCHECK --interval=5s --retries=3 --timeout=3s CMD pidof telegraf
-
-LABEL axway_image=telegraf
-# will be updated whenever there's a new commit
-LABEL commit=${GIT_COMMIT}
-LABEL branch=${GIT_BRANCH}
