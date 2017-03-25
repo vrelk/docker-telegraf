@@ -1,11 +1,11 @@
-FROM appcelerator/alpine:3.5.1
-MAINTAINER Nicolas Degory <ndegory@axway.com>
+FROM appcelerator/alpine:3.5.2
 
-ENV TELEGRAF_VERSION 1.1.2
+ENV TELEGRAF_VERSION 1.2.1
 
 RUN apk update && apk upgrade && \
     apk --virtual build-deps add go git gcc musl-dev make binutils patch go && \
     export GOPATH=/go && \
+    go version && \
     go get -v github.com/influxdata/telegraf && \
     cd $GOPATH/src/github.com/influxdata/telegraf && \
     if [ $TELEGRAF_VERSION != "master" ]; then git checkout -q --detach "${TELEGRAF_VERSION}" ; fi && \
