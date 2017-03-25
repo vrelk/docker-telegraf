@@ -1,6 +1,6 @@
-From appcelerator/alpine:3.5.1
+From appcelerator/alpine:3.5.2
 RUN apk --update add docker bind-tools@edge
-RUN apk add go git musl-dev && \
+RUN apk --update add go git musl-dev && \
     export GOPATH=/go && \
     go get -v github.com/nats-io/nats && \
     cd $GOPATH/src/github.com/nats-io/nats && \
