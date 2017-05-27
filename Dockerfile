@@ -28,11 +28,12 @@ RUN apk update && apk upgrade && \
     cd / && rm -rf /var/cache/apk/* $GOPATH /usr/local/go && \
     mkdir -p /etc/telegraf
 
-EXPOSE 8094
+EXPOSE 8094 9126
 
 ENV INFLUXDB_URL http://localhost:8086
 ENV INTERVAL 10s
 ENV OUTPUT_INFLUXDB_ENABLED     true
+ENV OUTPUT_PROMETHEUS_ENABLED   false
 ENV OUTPUT_CLOUDWATCH_ENABLED   false
 ENV OUTPUT_KAFKA_ENABLED        false
 ENV OUTPUT_NATS_ENABLED         false
@@ -58,5 +59,3 @@ COPY run.sh /run.sh
 
 ENTRYPOINT ["/run.sh"]
 CMD []
-
-HEALTHCHECK --interval=5s --retries=3 --timeout=3s CMD pidof telegraf

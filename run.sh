@@ -19,6 +19,7 @@ echo "Haproxy:         $INPUT_HAPROXY_ENABLED (${INPUT_HAPROXY_SERVER:+$INPUT_HA
 
 echo "Configured outputs:"
 echo "InfluxDB:       $OUTPUT_INFLUXDB_ENABLED ($INFLUXDB_URL, rt=${INFLUXDB_RETENTION_POLICY-default})"
+echo "Prometheus:     $OUTPUT_PROMETHEUS_ENABLED (port=${PROMETHEUS_LISTEN:-9126}, expire=${PROMETHEUS_EXPIRATION_INTERVAL:-60s})"
 echo "Cloudwatch:     $OUTPUT_CLOUDWATCH_ENABLED"
 echo "Kafka:          $OUTPUT_KAFKA_ENABLED"
 echo "NATS:           $OUTPUT_NATS_ENABLED"

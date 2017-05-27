@@ -117,6 +117,18 @@
 # InfluxDB output is disabled
 {{ end }}
 
+# # Configuration for the Prometheus client to spawn
+{{ if eq .OUTPUT_PROMETHEUS_ENABLED "true" }}
+[[outputs.prometheus_client]]
+  ## Address to listen on
+  listen = "{{ .PROMETHEUS_LISTEN | default ":9126" }}"
+
+  ## Interval to expire metrics and not deliver to prometheus, 0 == no expiration
+  # expiration_interval = "{{ .PROMETHEUS_EXPIRATION_INTERVAL | default "60s" }}"
+{{ else }}
+# Prometheus output is disabled
+{{ end }}
+
 # Configuration for AWS CloudWatch output.
 {{ if eq .OUTPUT_CLOUDWATCH_ENABLED "true" }}
 [[outputs.cloudwatch]]

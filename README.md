@@ -30,6 +30,7 @@ COLLECTION_JITTER | Collection jitter by a random amount | 1s |
 FLUSH_INTERVAL | Default flushing interval for all outputs | 10s |
 FLUSH_JITTER | Jitter the flush interval by a random amount | 3s |
 OUTPUT_INFLUXDB_ENABLED | enable InfluxDB Output | true |
+OUTPUT_PROMETHEUS_ENABLED | enable Prometheus Output | false |
 OUTPUT_CLOUDWATCH_ENABLED | enable Amazon Cloudwatch Output | false |
 OUTPUT_KAFKA_ENABLED | enable Kafka Output | false |
 OUTPUT_NATS_ENABLED | enable NATS Output | false |
@@ -54,6 +55,8 @@ INFLUXDB_RETENTION_POLICY | Set the name of the policy | default | autogen
 INFLUXDB_USER | InfluxDB username | |
 INFLUXDB_PASS | InfluxDB password | metrics |
 INFLUXDB_TIMEOUT | InfluxDB timetout (in seconds) | 5 |
+PROMETHEUS_LISTEN | Prometheus output listen address | :9126 |
+PROMETHEUS_EXPIRATION_INTERVAL | Interval to expire Prometheus metrics | 60s
 CLOUDWATCH_REGION | Amazon region | us-east-1 |
 CLOUDWATCH_NAMESPACE | Namespace | InfluxData/Telegraf |
 INPUT_NATS_URL | Url of NATS server | nats://localhost:4222 |
@@ -77,4 +80,5 @@ KAFKA_DATA_FORMAT | Kafka data format | influx |
 
 - telegraf-0.13
 - telegraf-1.0.1, telegraf-1.0
-- telegraf-1.1.2, telegraf-1.1, latest
+- telegraf-1.1.2, telegraf-1.1
+- telegraf-1.2.1, telegraf-1.2, latest
