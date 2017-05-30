@@ -1,10 +1,10 @@
 FROM appcelerator/alpine:3.5.2
 
-ENV TELEGRAF_VERSION 1.2.1
+ENV TELEGRAF_VERSION 1.3.0
 
-ENV GOLANG_VERSION 1.8
+ENV GOLANG_VERSION 1.8.3
 ENV GOLANG_SRC_URL https://golang.org/dl/go$GOLANG_VERSION.src.tar.gz
-ENV GOLANG_SRC_SHA256 406865f587b44be7092f206d73fc1de252600b79b3cacc587b74b5ef5c623596
+ENV GOLANG_SRC_SHA256 5f5dea2447e7dcfdc50fa6b94c512e58bfba5673c039259fd843f68829d99fa6
 
 RUN apk update && apk upgrade && \
     apk --virtual build-deps add openssl git gcc musl-dev make binutils patch go && \

@@ -81,4 +81,5 @@ KAFKA_DATA_FORMAT | Kafka data format | influx |
 - telegraf-0.13
 - telegraf-1.0.1, telegraf-1.0
 - telegraf-1.1.2, telegraf-1.1
-- telegraf-1.2.1, telegraf-1.2, latest
+- telegraf-1.2.1, telegraf-1.2
+- telegraf-1.3.0, telegraf-1.3, latest
