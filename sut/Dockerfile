@@ -1,4 +1,4 @@
-From appcelerator/alpine:3.5.2
+From appcelerator/alpine:3.6.0
 RUN apk --update add docker bind-tools@edge
 RUN apk --update add go git musl musl-dev && \
     export GOPATH=/go && \

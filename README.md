@@ -40,12 +40,12 @@ INPUT_NATS_ENABLED | enable Nats Input | false |
 INPUT_CPU_ENABLED | enable cpu metrics | true |
 INPUT_DISK_ENABLED | enable disk metrics | true |
 INPUT_DISKIO_ENABLED | enable disk I/O metrics | true |
-INPUT_KERNEL_ENABLED | enable kernel metrics | false |
+INPUT_KERNEL_ENABLED | enable kernel metrics | true |
 INPUT_MEM_ENABLED | enable mem metrics | true |
 INPUT_PROCESS_ENABLED | enable process metrics | true |
 INPUT_SWAP_ENABLED | enable swap metrics | true |
 INPUT_SYSTEM_ENABLED | enable system metrics | true |
-INPUT_NETSTAT_ENABLED | enable netstat metrics | false |
+INPUT_NETSTAT_ENABLED | enable netstat metrics | true |
 INPUT_NET_ENABLED | enable net metrics | true |
 INPUT_LISTENER_ENABLED | enable generic TCP listener | false |
 INPUT_DOCKER_ENABLED | enable Docker metrics | true |
@@ -82,4 +82,4 @@ KAFKA_DATA_FORMAT | Kafka data format | influx |
 - telegraf-1.0.1, telegraf-1.0
 - telegraf-1.1.2, telegraf-1.1
 - telegraf-1.2.1, telegraf-1.2
-- telegraf-1.3.0, telegraf-1.3, latest
+- telegraf-1.3.2, telegraf-1.3, latest

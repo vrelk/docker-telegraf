@@ -1,22 +1,11 @@
-FROM appcelerator/alpine:3.5.2
+FROM appcelerator/alpine:3.6.0
 
-ENV TELEGRAF_VERSION 1.3.0
+ENV TELEGRAF_VERSION 1.3.2
 
-ENV GOLANG_VERSION 1.8.3
-ENV GOLANG_SRC_URL https://golang.org/dl/go$GOLANG_VERSION.src.tar.gz
-ENV GOLANG_SRC_SHA256 5f5dea2447e7dcfdc50fa6b94c512e58bfba5673c039259fd843f68829d99fa6
 
 RUN apk update && apk upgrade && \
     apk --virtual build-deps add openssl git gcc musl-dev make binutils patch go && \
-    export GOROOT_BOOTSTRAP="$(go env GOROOT)" && \
-    wget -q "$GOLANG_SRC_URL" -O golang.tar.gz && \
-    echo "$GOLANG_SRC_SHA256  golang.tar.gz" | sha256sum -c - && \
-    tar -C /usr/local -xzf golang.tar.gz && \
-    rm golang.tar.gz && \
-    cd /usr/local/go/src && \
-    ./make.bash && \
     export GOPATH=/go && \
-    export PATH=/usr/local/go/bin:$PATH && \
     go version && \
     go get -v github.com/influxdata/telegraf && \
     cd $GOPATH/src/github.com/influxdata/telegraf && \
@@ -25,7 +14,7 @@ RUN apk update && apk upgrade && \
     chmod +x $GOPATH/bin/* && \
     mv $GOPATH/bin/* /bin/ && \
     apk del build-deps && \
-    cd / && rm -rf /var/cache/apk/* $GOPATH /usr/local/go && \
+    cd / && rm -rf /var/cache/apk/* $GOPATH && \
     mkdir -p /etc/telegraf
 
 EXPOSE 8094 9126
@@ -43,13 +32,13 @@ ENV INPUT_NATS_ENABLED          false
 ENV INPUT_CPU_ENABLED           true
 ENV INPUT_DISK_ENABLED          true
 ENV INPUT_DISKIO_ENABLED        true
-ENV INPUT_KERNEL_ENABLED        false
+ENV INPUT_KERNEL_ENABLED        true
 ENV INPUT_MEM_ENABLED           true
 ENV INPUT_PROCESS_ENABLED       true
 ENV INPUT_SWAP_ENABLED          true
 ENV INPUT_SYSTEM_ENABLED        true
 ENV INPUT_NET_ENABLED           true
-ENV INPUT_NETSTAT_ENABLED       false
+ENV INPUT_NETSTAT_ENABLED       true
 ENV INPUT_DOCKER_ENABLED        true
 ENV INPUT_LISTENER_ENABLED      false
 ENV INPUT_HAPROXY_ENABLED       false
