@@ -20,6 +20,7 @@ RUN apk update && apk upgrade && \
 EXPOSE 8094 9126
 
 ENV INFLUXDB_URL http://localhost:8086
+ENV INFLUXDB_DB telegraf
 ENV INTERVAL 10s
 ENV OUTPUT_INFLUXDB_ENABLED     true
 ENV OUTPUT_PROMETHEUS_ENABLED   false
