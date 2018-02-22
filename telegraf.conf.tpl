@@ -93,7 +93,7 @@
   # urls = ["udp://localhost:8089"] # UDP endpoint example
   urls = ["{{ .INFLUXDB_URL }}"] # required
   ## The target database for metrics (telegraf will create it if not exists).
-  database = "telegraf" # required
+  database = "{{ .INFLUXDB_DB }}" # required
   ## Retention policy to write to.
   retention_policy = "{{ .INFLUXDB_RETENTION_POLICY | default "default" }}"
   ## Precision of writes, valid values are "ns", "us", "ms", "s", "m", "h".
