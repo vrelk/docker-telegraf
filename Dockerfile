@@ -1,6 +1,6 @@
-FROM appcelerator/alpine:3.6.0
+FROM appcelerator/alpine:3.7.0
 
-ENV TELEGRAF_VERSION 1.3.2
+ENV TELEGRAF_VERSION 1.5.2
 
 
 RUN apk update && apk upgrade && \
